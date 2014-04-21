@@ -1,0 +1,11 @@
+11.04.2014 - Morgen:
+- Durchdenken Ablauf
+- Andere Variante für Koordinaten: e.X, e.Y --> geht nicht von Bildschirmrand, sondern von Picturebox aus
+- Funktion "Auf welchem Feld bin ich", neu gemacht --> funktioniert!!
+
+
+13.04.2014
+- Steine anhand von Array setzen
+
+17.04.2014
+- Steine bewegen (ohne Regeln)

@@ -30,6 +30,7 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.pic_Spielfeld = new System.Windows.Forms.PictureBox();
+            this.btn_start = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pic_Spielfeld)).BeginInit();
             this.SuspendLayout();
             // 
@@ -46,11 +47,22 @@
             this.pic_Spielfeld.SizeChanged += new System.EventHandler(this.Form1_SizeChanged);
             this.pic_Spielfeld.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pic_Spielfeld_MouseClick);
             // 
+            // btn_start
+            // 
+            this.btn_start.Location = new System.Drawing.Point(30, 30);
+            this.btn_start.Name = "btn_start";
+            this.btn_start.Size = new System.Drawing.Size(125, 53);
+            this.btn_start.TabIndex = 1;
+            this.btn_start.Text = "Start";
+            this.btn_start.UseVisualStyleBackColor = true;
+            this.btn_start.Click += new System.EventHandler(this.btn_start_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(784, 562);
+            this.Controls.Add(this.btn_start);
             this.Controls.Add(this.pic_Spielfeld);
             this.Name = "Form1";
             this.Text = "Form1";
@@ -64,6 +76,7 @@
         #endregion
 
         private System.Windows.Forms.PictureBox pic_Spielfeld;
+        private System.Windows.Forms.Button btn_start;
     }
 }
 

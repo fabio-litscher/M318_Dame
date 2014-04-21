@@ -43,3 +43,12 @@ F:\Schule\c# projekt\M318_Project_Dame\Dame\Dame\Dame\obj\Debug\Dame.csprojResol
 F:\Schule\c# projekt\M318_Project_Dame\Dame\Dame\Dame\obj\Debug\Dame.Form1.resources
 F:\Schule\c# projekt\M318_Project_Dame\Dame\Dame\Dame\obj\Debug\Dame.Properties.Resources.resources
 F:\Schule\c# projekt\M318_Project_Dame\Dame\Dame\Dame\obj\Debug\Dame.csproj.GenerateResource.Cache
+D:\Userdata\Fabio\Documents\GitHub\M318_Dame\Dame\Dame\Dame\bin\Debug\Dame.exe.config
+D:\Userdata\Fabio\Documents\GitHub\M318_Dame\Dame\Dame\Dame\obj\Debug\Dame.exe
+D:\Userdata\Fabio\Documents\GitHub\M318_Dame\Dame\Dame\Dame\obj\Debug\Dame.pdb
+D:\Userdata\Fabio\Documents\GitHub\M318_Dame\Dame\Dame\Dame\bin\Debug\Dame.exe
+D:\Userdata\Fabio\Documents\GitHub\M318_Dame\Dame\Dame\Dame\bin\Debug\Dame.pdb
+D:\Userdata\Fabio\Documents\GitHub\M318_Dame\Dame\Dame\Dame\obj\Debug\Dame.csprojResolveAssemblyReference.cache
+D:\Userdata\Fabio\Documents\GitHub\M318_Dame\Dame\Dame\Dame\obj\Debug\Dame.Form1.resources
+D:\Userdata\Fabio\Documents\GitHub\M318_Dame\Dame\Dame\Dame\obj\Debug\Dame.Properties.Resources.resources
+D:\Userdata\Fabio\Documents\GitHub\M318_Dame\Dame\Dame\Dame\obj\Debug\Dame.csproj.GenerateResource.Cache

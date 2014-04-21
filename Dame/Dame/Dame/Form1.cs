@@ -64,6 +64,11 @@ namespace Dame
             // berechneKoordinaten();
         }
 
+        private void btn_start_Click(object sender, EventArgs e)
+        {
+            zeichneSteine();
+        }
+
         private void pic_Spielfeld_MouseClick(object sender, MouseEventArgs e) // Nur für Maus
         {
             int wertX = e.X;
@@ -217,5 +222,6 @@ namespace Dame
         {
             //berechneKoordinaten();
         }
+
     }
 }
