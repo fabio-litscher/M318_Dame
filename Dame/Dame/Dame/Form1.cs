@@ -18,6 +18,7 @@ namespace Dame
 
         int[, ,] fields = new int[8, 8, 4];     // 3 Dimensionales Array: X, Y, Spielstein (0=kein Stein, 1=Spieler1, 2=Spieler2), zulässiges Feld (0=ja, 1=nein)
         int lastColor;
+        int lastFieldX = -1, lastFieldY = -1;
 
         public Form1()
         {
@@ -71,12 +72,59 @@ namespace Dame
 
         private void pic_Spielfeld_MouseClick(object sender, MouseEventArgs e) // Nur für Maus
         {
-            int wertX = e.X;
-            int wertY = e.Y;
             int eineEinheit = pic_Spielfeld.Width / 10;
+            int feldX = fieldX(e.X, eineEinheit);
+            int feldY = fieldY(e.Y, eineEinheit);
 
-            welchesFeld(wertX, wertY, eineEinheit);
+            if (feldGesperrt(feldX, feldY) == 0)
+            {
+                Console.WriteLine("Feld gesperrt!");
+                fields[lastFieldX, lastFieldY, 2] = lastColor;
+                lastColor = 0;
+                zeichneSteine();
+                return;
+            }
+
+            if (feldBesetzt(feldX, feldY) == 0)
+            {
+                Console.WriteLine("Feld besetzt");
+                fields[lastFieldX, lastFieldY, 2] = lastColor;
+                lastColor = 0;
+                zeichneSteine();
+                return;
+            }
+
+            if (fahrtrichtung(feldX, feldY) == 1)   // lastFields werden noch benötigt!
+            {
+                Console.WriteLine("Rückwärts!");
+                //return;
+            }
+
+            // set lastFieldX & lastFieldY ?????
+
+            switch (fields[feldX, feldY, 2])
+            {
+                case 0:
+                    fields[feldX, feldY, 2] = lastColor;
+                    lastColor = 0;
+                    break;
+                case 1:
+                    fields[feldX, feldY, 2] = 0;
+                    lastColor = 1;
+                    lastFieldX = feldX;
+                    lastFieldY = feldY;
+                    break;
+                case 2:
+                    fields[feldX, feldY, 2] = 0;
+                    lastColor = 2;
+                    lastFieldX = feldX;
+                    lastFieldY = feldY;
+                    break;
+                default:
+                    return;
+            }
             zeichneSteine();
+
 
 
             /*      //Ausgabe ganzes array
@@ -91,49 +139,36 @@ namespace Dame
             */
         }
 
-        public void welchesFeld(int wertX, int wertY, int eineEinheit)
+        public int fieldX(int wertX, int eineEinheit)
         {
-            int feldX = -1, feldY = -1;
-            int x = 0, y = 0, exit1 = 0, exit2 = 0;
+            int feldX = -1, x = 0, exit = 0;
 
-            while (exit1 != 1 && x < 8)
+            while (exit != 1 && x < 8)
             {
                 if (wertX >= fields[x, 0, 0] && wertX < fields[x, 0, 0] + eineEinheit)
                 {
                     feldX = x;
-                    exit1 = 1;
+                    exit = 1;
                 }
                 x++;
             }
+            return feldX;
+        }
 
-            while (exit2 != 1 && y < 8)
+        public int fieldY(int wertY, int eineEinheit)
+        {
+            int feldY = -1, y = 0, exit = 0;
+
+            while (exit != 1 && y < 8)
             {
                 if (wertY >= fields[0, y, 1] && wertY < fields[0, y, 1] + eineEinheit)
                 {
                     feldY = y;
-                    exit2 = 1;
+                    exit = 1;
                 }
                 y++;
             }
-
-            switch(fields[feldX, feldY, 2])
-            {
-                case 0:
-                    fields[feldX, feldY, 2] = lastColor;
-                    lastColor = 0;
-                    break;
-                case 1:
-                    fields[feldX, feldY, 2] = 0;
-                    lastColor = 1;
-                    break;
-                case 2:
-                    fields[feldX, feldY, 2] = 0;
-                    lastColor = 2;
-                    break;
-                default: 
-                    return;
-            }
-          
+            return feldY;
         }
 
  /*       private void berechneGroesse()
@@ -221,6 +256,53 @@ namespace Dame
         private void Form1_LocationChanged(object sender, EventArgs e)
         {
             //berechneKoordinaten();
+        }
+
+        //////////////////////
+        // Regelen / Logik  //
+        //////////////////////
+
+        public int feldGesperrt(int feldX, int feldY)
+        {
+            if (fields[feldX, feldY, 3] == 1)   // wenn feld gesperrt, return 0
+            {
+                return 0;
+            }
+            else return 1;
+        }
+
+        public int feldBesetzt(int feldX, int feldY)
+        {
+            if (fields[feldX, feldY, 2] != 0 && lastColor != 0) // wenn feld besetzt, return 0
+            {
+                return 0;
+            }
+            else return 1;
+        }
+
+        public int fahrtrichtung(int feldX, int feldY)
+        {
+            if (lastFieldY == -1)   // wenn erster Zug, immer vorwärts
+            {
+                return 0;
+            }
+            if (lastColor == 1)
+            {
+                if (feldY <= lastFieldY) // wenn rückwärts return 1
+                {
+                    return 1;
+                }
+                else return 0;
+            }
+            else
+            {
+                if (feldY >= lastFieldY) // wenn rückwärts return 1
+                {
+                    return 1;
+                }
+                else return 0;
+            }
+
         }
 
     }

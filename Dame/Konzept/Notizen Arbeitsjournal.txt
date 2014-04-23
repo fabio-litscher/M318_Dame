@@ -7,5 +7,16 @@
 13.04.2014
 - Steine anhand von Array setzen
 
+
 17.04.2014
-- Steine bewegen (ohne Regeln)
+- Steine bewegen (ohne Regeln)	-->	Funktion die immer Array durchgeht und dann zeichnet
+
+
+23.04.2014
+- erste Regeln begonnen
+	1) feld gesperrt?	-->	funktioniert --> einfache Array abfrage
+	2) feld besetzt?	-->	funktioniert nur eingeschränkt, nach diesem Zug geht nichts mehr
+	3) fahrtrichtung	-->	funktioniert noch nicht ganz, lastfield muss noch richtig gemacht werden
+- next steps:
+	1) Weitere Regelfunktionen machen
+	2) Ablauf bezüglich Abfrage aller Regeln durchdenken, implementieren

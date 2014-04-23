@@ -52,3 +52,21 @@ D:\Userdata\Fabio\Documents\GitHub\M318_Dame\Dame\Dame\Dame\obj\Debug\Dame.cspro
 D:\Userdata\Fabio\Documents\GitHub\M318_Dame\Dame\Dame\Dame\obj\Debug\Dame.Form1.resources
 D:\Userdata\Fabio\Documents\GitHub\M318_Dame\Dame\Dame\Dame\obj\Debug\Dame.Properties.Resources.resources
 D:\Userdata\Fabio\Documents\GitHub\M318_Dame\Dame\Dame\Dame\obj\Debug\Dame.csproj.GenerateResource.Cache
+D:\userdata\lfab\Desktop\Dame\Dame\Dame\bin\Debug\Dame.exe.config
+D:\userdata\lfab\Desktop\Dame\Dame\Dame\obj\Debug\Dame.exe
+D:\userdata\lfab\Desktop\Dame\Dame\Dame\obj\Debug\Dame.pdb
+D:\userdata\lfab\Desktop\Dame\Dame\Dame\bin\Debug\Dame.exe
+D:\userdata\lfab\Desktop\Dame\Dame\Dame\bin\Debug\Dame.pdb
+D:\userdata\lfab\Desktop\Dame\Dame\Dame\obj\Debug\Dame.csprojResolveAssemblyReference.cache
+D:\userdata\lfab\Desktop\Dame\Dame\Dame\obj\Debug\Dame.Form1.resources
+D:\userdata\lfab\Desktop\Dame\Dame\Dame\obj\Debug\Dame.Properties.Resources.resources
+D:\userdata\lfab\Desktop\Dame\Dame\Dame\obj\Debug\Dame.csproj.GenerateResource.Cache
+H:\Schule\c# projekt\Dame\Dame\Dame\bin\Debug\Dame.exe.config
+H:\Schule\c# projekt\Dame\Dame\Dame\obj\Debug\Dame.exe
+H:\Schule\c# projekt\Dame\Dame\Dame\obj\Debug\Dame.pdb
+H:\Schule\c# projekt\Dame\Dame\Dame\bin\Debug\Dame.exe
+H:\Schule\c# projekt\Dame\Dame\Dame\bin\Debug\Dame.pdb
+H:\Schule\c# projekt\Dame\Dame\Dame\obj\Debug\Dame.csprojResolveAssemblyReference.cache
+H:\Schule\c# projekt\Dame\Dame\Dame\obj\Debug\Dame.Form1.resources
+H:\Schule\c# projekt\Dame\Dame\Dame\obj\Debug\Dame.Properties.Resources.resources
+H:\Schule\c# projekt\Dame\Dame\Dame\obj\Debug\Dame.csproj.GenerateResource.Cache
