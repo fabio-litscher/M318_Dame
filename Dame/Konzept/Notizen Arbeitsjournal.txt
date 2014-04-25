@@ -20,3 +20,11 @@
 - next steps:
 	1) Weitere Regelfunktionen machen
 	2) Ablauf bezüglich Abfrage aller Regeln durchdenken, implementieren
+
+
+25.04.2014
+- Regeln
+	1) fahrtrichtung	-->	kann nicht mehr rw fahren
+	2) fressen angefangen	-->	funktioniert noch nicht
+- Meilenstein 1 nicht erreicht!
+	- wissen kommt erst langsam

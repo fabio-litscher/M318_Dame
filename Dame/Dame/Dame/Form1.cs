@@ -19,6 +19,7 @@ namespace Dame
         int[, ,] fields = new int[8, 8, 4];     // 3 Dimensionales Array: X, Y, Spielstein (0=kein Stein, 1=Spieler1, 2=Spieler2), zulässiges Feld (0=ja, 1=nein)
         int lastColor;
         int lastFieldX = -1, lastFieldY = -1;
+        int lastPositionX = -1, lastPositionY = -1;
 
         public Form1()
         {
@@ -75,6 +76,8 @@ namespace Dame
             int eineEinheit = pic_Spielfeld.Width / 10;
             int feldX = fieldX(e.X, eineEinheit);
             int feldY = fieldY(e.Y, eineEinheit);
+            lastPositionX = feldX;
+            lastPositionY = feldY;
 
             if (feldGesperrt(feldX, feldY) == 0)
             {
@@ -94,19 +97,21 @@ namespace Dame
                 return;
             }
 
-            if (fahrtrichtung(feldX, feldY) == 1)   // lastFields werden noch benötigt!
+            if (fahrtrichtung(feldX, feldY) == 1)
             {
                 Console.WriteLine("Rückwärts!");
-                //return;
+                fields[lastFieldX, lastFieldY, 2] = lastColor;
+                lastColor = 0;
+                zeichneSteine();
+                return;
             }
-
-            // set lastFieldX & lastFieldY ?????
 
             switch (fields[feldX, feldY, 2])
             {
                 case 0:
                     fields[feldX, feldY, 2] = lastColor;
                     lastColor = 0;
+                    lastFieldY = -1;
                     break;
                 case 1:
                     fields[feldX, feldY, 2] = 0;
@@ -123,6 +128,7 @@ namespace Dame
                 default:
                     return;
             }
+            fressen(feldX, feldY);
             zeichneSteine();
 
 
@@ -258,6 +264,7 @@ namespace Dame
             //berechneKoordinaten();
         }
 
+
         //////////////////////
         // Regelen / Logik  //
         //////////////////////
@@ -282,27 +289,49 @@ namespace Dame
 
         public int fahrtrichtung(int feldX, int feldY)
         {
-            if (lastFieldY == -1)   // wenn erster Zug, immer vorwärts
+            // Y-Achse, überprüfung, dass nur vw gefahren wird
+            if (lastFieldY == -1 && lastFieldY != feldY)   // wenn erster Zug, immer vorwärts
             {
                 return 0;
             }
-            if (lastColor == 1)
+            if (lastColor == 1) // farbe: weiss
             {
-                if (feldY <= lastFieldY) // wenn rückwärts return 1
+                if (feldY <= lastFieldY && lastFieldY != feldY)
                 {
                     return 1;
                 }
                 else return 0;
             }
-            else
+            else // farbe: rot
             {
-                if (feldY >= lastFieldY) // wenn rückwärts return 1
+                if (feldY >= lastFieldY && lastFieldY != feldY)
                 {
                     return 1;
                 }
                 else return 0;
             }
 
+        }
+
+        public void fressen(int feldX, int feldY)
+        {
+            if (lastColor == 1) // farbe: weiss
+            {
+                if (lastPositionY + 2 == feldY)
+                {
+                    if (fields[feldX - 1, feldY - 1, 2] == 2) fields[feldX - 1, feldY - 1, 2] = 0;
+                    if (fields[feldX + 1, feldY - 1, 2] == 2) fields[feldX - 1, feldY + 1, 2] = 0;
+                }
+            }
+            else // farbe: rot
+            {
+                if (lastPositionY - 2 == feldY)
+                {
+                    if (fields[feldX - 1, feldY + 1, 2] == 1) fields[feldX - 1, feldY + 1, 2] = 0;
+                    if (fields[feldX + 1, feldY + 1, 2] == 1) fields[feldX + 1, feldY + 1, 2] = 0;
+                }
+
+            }
         }
 
     }
