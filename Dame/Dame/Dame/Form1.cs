@@ -76,8 +76,6 @@ namespace Dame
             int eineEinheit = pic_Spielfeld.Width / 10;
             int feldX = fieldX(e.X, eineEinheit);
             int feldY = fieldY(e.Y, eineEinheit);
-            lastPositionX = feldX;
-            lastPositionY = feldY;
 
             if (feldGesperrt(feldX, feldY) == 0)
             {
@@ -85,53 +83,66 @@ namespace Dame
                 fields[lastFieldX, lastFieldY, 2] = lastColor;
                 lastColor = 0;
                 zeichneSteine();
-                return;
+                //return;
             }
 
-            if (feldBesetzt(feldX, feldY) == 0)
+            /*else if (gueltigeFahrt(feldX, feldY) == 1)
+            {
+                fields[lastFieldX, lastFieldY, 2] = lastColor;
+                lastColor = 0;
+                zeichneSteine();
+                //return;
+            }*/
+
+            else if (feldBesetzt(feldX, feldY) == 0)
             {
                 Console.WriteLine("Feld besetzt");
                 fields[lastFieldX, lastFieldY, 2] = lastColor;
                 lastColor = 0;
                 zeichneSteine();
-                return;
+                // return;
             }
 
-            if (fahrtrichtung(feldX, feldY) == 1)
+            else if (fahrtrichtung(feldX, feldY) == 1)
             {
                 Console.WriteLine("Rückwärts!");
                 fields[lastFieldX, lastFieldY, 2] = lastColor;
                 lastColor = 0;
                 zeichneSteine();
-                return;
+                //return;
             }
-
-            switch (fields[feldX, feldY, 2])
+            else
             {
-                case 0:
-                    fields[feldX, feldY, 2] = lastColor;
-                    lastColor = 0;
-                    lastFieldY = -1;
-                    break;
-                case 1:
-                    fields[feldX, feldY, 2] = 0;
-                    lastColor = 1;
-                    lastFieldX = feldX;
-                    lastFieldY = feldY;
-                    break;
-                case 2:
-                    fields[feldX, feldY, 2] = 0;
-                    lastColor = 2;
-                    lastFieldX = feldX;
-                    lastFieldY = feldY;
-                    break;
-                default:
-                    return;
+                schlagen(feldX, feldY);
+
+                switch (fields[feldX, feldY, 2])
+                {
+                    case 0:
+                        fields[feldX, feldY, 2] = lastColor;
+                        lastColor = 0;
+                        lastFieldY = -1;
+                        break;
+                    case 1:
+                        fields[feldX, feldY, 2] = 0;
+                        lastColor = 1;
+                        lastFieldX = feldX;
+                        lastFieldY = feldY;
+                        lastPositionX = feldX;
+                        lastPositionY = feldY;
+                        break;
+                    case 2:
+                        fields[feldX, feldY, 2] = 0;
+                        lastColor = 2;
+                        lastFieldX = feldX;
+                        lastFieldY = feldY;
+                        lastPositionX = feldX;
+                        lastPositionY = feldY;
+                        break;
+                    default:
+                        return;
+                }
             }
-            fressen(feldX, feldY);
             zeichneSteine();
-
-
 
             /*      //Ausgabe ganzes array
             for (int i =0; i<8; i++)
@@ -296,41 +307,54 @@ namespace Dame
             }
             if (lastColor == 1) // farbe: weiss
             {
-                if (feldY <= lastFieldY && lastFieldY != feldY)
+                if (feldY < lastFieldY && lastFieldY != feldY)
                 {
                     return 1;
                 }
                 else return 0;
             }
-            else // farbe: rot
+            else if (lastColor == 2) // farbe: rot
             {
-                if (feldY >= lastFieldY && lastFieldY != feldY)
+                if (feldY > lastFieldY && lastFieldY != feldY)
                 {
                     return 1;
                 }
                 else return 0;
+            }
+            else return 0;
+        }
+        
+        public int gueltigeFahrt(int feldX, int feldY)
+        {
+            if (feldX == lastFieldX)
+            {
+                return 1;
             }
 
+            if (feldY == lastFieldY)
+            {
+                return 1;
+            }
+            else return 0;
         }
 
-        public void fressen(int feldX, int feldY)
+        public void schlagen(int feldX, int feldY)
         {
             if (lastColor == 1) // farbe: weiss
             {
                 if (lastPositionY + 2 == feldY)
                 {
                     if (fields[feldX - 1, feldY - 1, 2] == 2) fields[feldX - 1, feldY - 1, 2] = 0;
-                    if (fields[feldX + 1, feldY - 1, 2] == 2) fields[feldX - 1, feldY + 1, 2] = 0;
+                    if (fields[feldX + 1, feldY - 1, 2] == 2) fields[feldX + 1, feldY - 1, 2] = 0;
                 }
             }
-            else // farbe: rot
+            else if (lastColor == 2) // farbe: rot
             {
                 if (lastPositionY - 2 == feldY)
                 {
                     if (fields[feldX - 1, feldY + 1, 2] == 1) fields[feldX - 1, feldY + 1, 2] = 0;
                     if (fields[feldX + 1, feldY + 1, 2] == 1) fields[feldX + 1, feldY + 1, 2] = 0;
                 }
-
             }
         }
 

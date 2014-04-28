@@ -22,9 +22,16 @@
 	2) Ablauf bezüglich Abfrage aller Regeln durchdenken, implementieren
 
 
-25.04.2014
+25.04.2014 - Schule
 - Regeln
 	1) fahrtrichtung	-->	kann nicht mehr rw fahren
 	2) fressen angefangen	-->	funktioniert noch nicht
 - Meilenstein 1 nicht erreicht!
 	- wissen kommt erst langsam
+
+
+
+28.04.2014
+- Regeln
+	1) schlagen funktioniert
+	2) nur diagonal & über mehrer felder hinweg springen funktioniert noch nicht ganz (nur erster Zug funktioniert)
