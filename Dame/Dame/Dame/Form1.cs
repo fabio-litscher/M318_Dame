@@ -16,10 +16,11 @@ namespace Dame
         Visualize Vs = new Visualize();
         Helper He = new Helper();
 
-        int[, ,] fields = new int[8, 8, 4];     // 3 Dimensionales Array: X, Y, Spielstein (0=kein Stein, 1=Spieler1, 2=Spieler2), zulässiges Feld (0=ja, 1=nein)
+        int[, ,] fields = new int[8, 8, 4];     // 3 Dimensionales Array: X, Y, Spielstein (0=kein Stein, 1=weiss, 2=rot), zulässiges Feld (0=ja, 1=nein)
         int lastColor;
         int lastFieldX = -1, lastFieldY = -1;
         int lastPositionX = -1, lastPositionY = -1;
+        int spieler = 1;   // 1 = weiss, 2 = rot    Spieler weiss beginnz immer
 
         public Form1()
         {
@@ -83,16 +84,14 @@ namespace Dame
                 fields[lastFieldX, lastFieldY, 2] = lastColor;
                 lastColor = 0;
                 zeichneSteine();
-                //return;
             }
 
-            /*else if (gueltigeFahrt(feldX, feldY) == 1)
+            else if (gueltigeFahrt(feldX, feldY) == 1)
             {
                 fields[lastFieldX, lastFieldY, 2] = lastColor;
                 lastColor = 0;
                 zeichneSteine();
-                //return;
-            }*/
+            }
 
             else if (feldBesetzt(feldX, feldY) == 0)
             {
@@ -100,7 +99,6 @@ namespace Dame
                 fields[lastFieldX, lastFieldY, 2] = lastColor;
                 lastColor = 0;
                 zeichneSteine();
-                // return;
             }
 
             else if (fahrtrichtung(feldX, feldY) == 1)
@@ -109,7 +107,12 @@ namespace Dame
                 fields[lastFieldX, lastFieldY, 2] = lastColor;
                 lastColor = 0;
                 zeichneSteine();
-                //return;
+            }
+            else if (diagonaleDistanz(feldX, feldY) == 1)
+            {
+                fields[lastFieldX, lastFieldY, 2] = lastColor;
+                lastColor = 0;
+                zeichneSteine();
             }
             else
             {
@@ -141,6 +144,12 @@ namespace Dame
                     default:
                         return;
                 }
+
+                // überprüfung ob noch schlagen möglich ist
+
+                // spielerwechsel, anderer Spieler dran
+                if (lastColor == 1) spieler = 2;
+                else if (lastColor == 2) spieler = 1;
             }
             zeichneSteine();
 
@@ -326,14 +335,47 @@ namespace Dame
         
         public int gueltigeFahrt(int feldX, int feldY)
         {
-            if (feldX == lastFieldX)
+            if (feldX == lastFieldX && lastColor != 0)
             {
-                return 1;
+                return 1;   // fahrt ungültig
             }
 
-            if (feldY == lastFieldY)
+            if (feldY == lastFieldY && lastColor != 0)
             {
-                return 1;
+                return 1;   // fahrt ungültig
+            }
+            else return 0;
+        }
+
+        public int diagonaleDistanz(int feldX, int feldY)
+        {
+            if (lastColor == 1) // weiss
+            {
+                if (feldY > lastPositionY + 2)
+                {
+                    return 1;   // ungültig
+                }
+                else if (feldY == lastPositionY + 2)
+                {
+                    if (fields[feldX - 1, feldY - 1, 2] == 2) return 0;         // gültig
+                    else if (fields[feldX + 1, feldY - 1, 2] == 2) return 0;    // gültig
+                    else return 1;                                              // ungültig
+                }
+                else return 0;
+            }
+            else if (lastColor == 2) // rot
+            {
+                if (feldY < lastPositionY - 2)
+                {
+                    return 1;   // ungültig
+                }
+                else if (feldY == lastPositionY -2)
+                {
+                    if (fields[feldX - 1, feldY + 1, 2] == 1) return 0;         // gültig
+                    else if (fields[feldX + 1, feldY + 1, 2] == 1) return 0;    // gültig
+                    else return 1;                                              // ungültig
+                }
+                else return 0;
             }
             else return 0;
         }

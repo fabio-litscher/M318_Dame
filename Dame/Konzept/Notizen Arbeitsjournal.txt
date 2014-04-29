@@ -4,12 +4,15 @@
 - Funktion "Auf welchem Feld bin ich", neu gemacht --> funktioniert!!
 
 
+
 13.04.2014
 - Steine anhand von Array setzen
 
 
+
 17.04.2014
 - Steine bewegen (ohne Regeln)	-->	Funktion die immer Array durchgeht und dann zeichnet
+
 
 
 23.04.2014
@@ -20,6 +23,7 @@
 - next steps:
 	1) Weitere Regelfunktionen machen
 	2) Ablauf bezüglich Abfrage aller Regeln durchdenken, implementieren
+
 
 
 25.04.2014 - Schule
@@ -33,5 +37,22 @@
 
 28.04.2014
 - Regeln
-	1) schlagen funktioniert
+	1) schlagen funktioniert fast --> am Rand noch nicht, da auf beide Seiten überprüft wird ob Gegner ist, Index ausserhalb Bereich
 	2) nur diagonal & über mehrer felder hinweg springen funktioniert noch nicht ganz (nur erster Zug funktioniert)
+
+
+
+29.04.2014
+ - Regeln
+	1) nur diagonal / nicht über mehrere Felder gerade springen: funktioniert, bei if musste auch noch abgefragt werden ob lastCOlor != 0 ist
+	2) Welcher Spieler ist dran?	-->	Variable spieler (=1 --> weiss, =2 --> rot) --> noch nicht ausprogrammiert
+	3) Diagonale Fahrtlänge überprüfen --> funktioniert, ausser man macht es am Rand --> Index ausserhalb Bereich (wie beim schlagen)
+
+- nächstes ToDo
+	1) Problem mit schlagen am Rand und zu lange Diagonale Züge am Rand beheben!
+	2) welcher spieler ist dran fertigstellen
+
+- Idee
+	Spielerwechsel mit Zugzwang verbinden, Spieler wird erst gewechselt, wenn kein Schlagen mehr möglich ist
+
+
