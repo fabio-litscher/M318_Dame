@@ -1,18 +1,18 @@
 Guten Tag Herr Vogel
 
 Gerne laden wir Sie zu einer Statussitzung unseres Dame Projekts ein.
-Nachfolgend die Traktanden, welche wir mit Ihnen gerne besprechen würden.
+Nachfolgend die Traktanden, welche wir gerne mit Ihnen besprechen würden.
 
 Traktanden:
  - momentaner Stand
-	- Programm selber (c#)
-	- Stand im Vergleich zu Meilensteinen
-	- Arbeitsjournal / Daily Scrum
+- Programm selber (c#)
+- Stand im Vergleich zu Meilensteinen
+- Arbeitsjournal / Daily Scrum
  - weiteres Vorgehen
  - Ergänzungen / Fragen / Anregungen
 
 
-Wir bitten um eine Bestätigung, dass Sie die Einladung erhalten und zur Kenntniss genommen haben.
+Wir bitten um eine Bestätigung, dass Sie die Einladung erhalten haben.
 
 
 Vielen Dank und freundliche Grüsse

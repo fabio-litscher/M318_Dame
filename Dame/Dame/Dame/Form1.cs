@@ -145,11 +145,12 @@ namespace Dame
                         return;
                 }
 
-                // überprüfung ob noch schlagen möglich ist
-
-                // spielerwechsel, anderer Spieler dran
-                if (lastColor == 1) spieler = 2;
-                else if (lastColor == 2) spieler = 1;
+                if (schlagenMoeglich(feldX, feldY) == 1)    // wenn kein weiteres schlagen mehr möglich
+                {
+                    // spielerwechsel, wenn kein weiteres schlagen mehr möglich ist
+                    if (lastColor == 1) spieler = 2;
+                    else if (lastColor == 2) spieler = 1;
+                }
             }
             zeichneSteine();
 
@@ -398,6 +399,20 @@ namespace Dame
                     if (fields[feldX + 1, feldY + 1, 2] == 1) fields[feldX + 1, feldY + 1, 2] = 0;
                 }
             }
+        }
+
+        public int schlagenMoeglich(int feldY, int feldX)
+        {
+            if (lastColor == 1)  // wenn spieler weiss
+            {
+
+            }
+            else if (lastColor == 2)    // wenn spieler rot
+            {
+
+            }
+            
+            return 1;   // weiteres schlagen nicht möglich
         }
 
     }

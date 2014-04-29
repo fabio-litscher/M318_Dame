@@ -56,3 +56,4 @@
 	Spielerwechsel mit Zugzwang verbinden, Spieler wird erst gewechselt, wenn kein Schlagen mehr möglich ist
 
 
+schlagen anschauen!!! kann es sein, dass ein stein diagonal hinter einem geschlagen wird obwohl eigtl nicht geschlagen werden darf?
