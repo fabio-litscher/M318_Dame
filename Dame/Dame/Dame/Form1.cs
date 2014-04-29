@@ -145,7 +145,7 @@ namespace Dame
                         return;
                 }
 
-                if (schlagenMoeglich(feldX, feldY) == 1)    // wenn kein weiteres schlagen mehr möglich
+                if (schlagenMoeglichNormal(feldX, feldY) == 1)    // wenn kein weiteres schlagen mehr möglich
                 {
                     // spielerwechsel, wenn kein weiteres schlagen mehr möglich ist
                     if (lastColor == 1) spieler = 2;
@@ -153,17 +153,7 @@ namespace Dame
                 }
             }
             zeichneSteine();
-
-            /*      //Ausgabe ganzes array
-            for (int i =0; i<8; i++)
-            {
-                for (int k = 0; k<8; k++)
-                {
-                    Console.WriteLine(fields[i, k, 0]);
-                    Console.WriteLine(fields[i, k, 1]);
-                }
-            }
-            */
+            Console.WriteLine("Spieler: " + spieler);
         }
 
         public int fieldX(int wertX, int eineEinheit)
@@ -358,7 +348,17 @@ namespace Dame
                 }
                 else if (feldY == lastPositionY + 2)
                 {
-                    if (fields[feldX - 1, feldY - 1, 2] == 2) return 0;         // gültig
+                    if (feldX < 2)  // rand links
+                    {
+                        if (fields[feldX + 1, feldY - 1, 2] == 2) return 0;
+                        else return 1;
+                    }
+                    else if (feldX > 5)     // rand rechts
+                    {
+                        if (fields[feldX - 1, feldY - 1, 2] == 2) return 0;
+                        else return 1;
+                    }
+                    else if (fields[feldX - 1, feldY - 1, 2] == 2) return 0;         // gültig
                     else if (fields[feldX + 1, feldY - 1, 2] == 2) return 0;    // gültig
                     else return 1;                                              // ungültig
                 }
@@ -372,7 +372,17 @@ namespace Dame
                 }
                 else if (feldY == lastPositionY -2)
                 {
-                    if (fields[feldX - 1, feldY + 1, 2] == 1) return 0;         // gültig
+                    if (feldX < 2)
+                    {
+                        if (fields[feldX + 1, feldY + 1, 2] == 2) return 0;
+                        else return 1;
+                    }
+                    else if (feldX > 5)     // rand rechts
+                    {
+                        if (fields[feldX - 1, feldY + 1, 2] == 2) return 0;
+                        else return 1;
+                    }
+                    else if (fields[feldX - 1, feldY + 1, 2] == 1) return 0;         // gültig
                     else if (fields[feldX + 1, feldY + 1, 2] == 1) return 0;    // gültig
                     else return 1;                                              // ungültig
                 }
@@ -385,10 +395,19 @@ namespace Dame
         {
             if (lastColor == 1) // farbe: weiss
             {
-                if (lastPositionY + 2 == feldY)
+                if (feldY > 5) return;
+                else if (lastPositionY + 2 == feldY)
                 {
-                    if (fields[feldX - 1, feldY - 1, 2] == 2) fields[feldX - 1, feldY - 1, 2] = 0;
-                    if (fields[feldX + 1, feldY - 1, 2] == 2) fields[feldX + 1, feldY - 1, 2] = 0;
+                    if (feldX < 2)
+                    {
+                        if (fields[feldX + 1, feldY - 1, 2] == 2) fields[feldX + 1, feldY - 1, 2] = 0;
+                    }
+                    else if (feldX > 5)
+                    {
+                        if (fields[feldX - 1, feldY - 1, 2] == 2) fields[feldX - 1, feldY - 1, 2] = 0;
+                    }
+                    else if (fields[feldX - 1, feldY - 1, 2] == 2) fields[feldX - 1, feldY - 1, 2] = 0;
+                    else if (fields[feldX + 1, feldY - 1, 2] == 2) fields[feldX + 1, feldY - 1, 2] = 0;
                 }
             }
             else if (lastColor == 2) // farbe: rot
@@ -401,19 +420,58 @@ namespace Dame
             }
         }
 
-        public int schlagenMoeglich(int feldY, int feldX)
+        public int schlagenMoeglichNormal(int feldX, int feldY)
         {
             if (lastColor == 1)  // wenn spieler weiss
             {
-
+                if (feldY > 5) return 1;    // spielfeldrand unten zu nahe
+                else if (feldX < 2)              // wenn am linken zu nahe Rand
+                {
+                    if (fields[feldX + 1, feldY + 1, 2] == 2 && fields[feldX + 2, feldY + 2, 2] == 0) return 0;
+                    else return 1;
+                }
+                else if (feldX > 5)              // wenn am linken zu nahe Rand
+                {
+                    if (fields[feldX - 1, feldY + 1, 2] == 2 && fields[feldX - 2, feldY + 2, 2] == 0) return 0;
+                    else return 1;
+                }
+                else if (fields[feldX - 1, feldY + 1, 2] == 2 && fields[feldX - 2, feldY + 2, 2] == 0) return 0;
+                else if (fields[feldX + 1, feldY + 1, 2] == 2 && fields[feldX + 2, feldY + 2, 2] == 0) return 0;
+                else return 1;
             }
+
             else if (lastColor == 2)    // wenn spieler rot
             {
-
+                if (feldY < 2) return 1;    // spielfeldrand unten zu nahe
+                else if (feldX < 2)              // wenn am linken zu nahe Rand
+                {
+                    if (fields[feldX + 1, feldY - 1, 2] == 1 && fields[feldX + 2, feldY - 2, 2] == 0) return 0;
+                    else return 1;
+                }
+                else if (feldX > 5)              // wenn am linken zu nahe Rand
+                {
+                    if (fields[feldX - 1, feldY - 1, 2] == 1 && fields[feldX - 2, feldY - 2, 2] == 0) return 0;
+                    else return 1;
+                }
+                else if (fields[feldX - 1, feldY - 1, 2] == 1 && fields[feldX - 2, feldY - 2, 2] == 0) return 0;
+                else if (fields[feldX + 1, feldY - 1, 2] == 1 && fields[feldX + 2, feldY - 2, 2] == 0) return 0;
+                else return 1;
             }
             
-            return 1;   // weiteres schlagen nicht möglich
+            else return 1;   // weiteres schlagen nicht möglich
         }
 
     }
 }
+
+
+/*      //Ausgabe ganzes array
+            for (int i =0; i<8; i++)
+            {
+                for (int k = 0; k<8; k++)
+                {
+                    Console.WriteLine(fields[i, k, 0]);
+                    Console.WriteLine(fields[i, k, 1]);
+                }
+            }
+            */
