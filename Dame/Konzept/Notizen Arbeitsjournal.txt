@@ -70,3 +70,5 @@
 
  - nächstes ToDo
 	1) überprüfung ob irgendwo geschlagen werden kann, (Schlagzwang) --> Im Moment kann man mit einem anderen Stein normal fahren, auch wenn i wo geschlagen werden kann
+		- funktion gemacht, greift aber noch nicht
+	2) Spielende, wenn von einer Farbe keine Steine mehr übrig sind
