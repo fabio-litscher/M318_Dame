@@ -53,3 +53,20 @@
 	1) schlagen überarbeiten!! es darf nur auf eine diagonale nach hinten geschaut werden sonst wird je nach situation ein stein zu viel gefressen!
 	2) Problem mit schlagen am Rand und zu lange Diagonale Züge am Rand beheben!
 	3) welcher spieler ist dran fertigstellen 
+
+
+
+30.04.2014
+ - Regeln
+	1) schlagen setzt jetzt nur noch Wert auf 0 (0=kein Stein), und wird von diagonal fahren (überprüft fahrt und wenn übersprungen ruft schlagen auf)
+	2) variable "schonngeschlagen", wird benötigt zum überprüfen ob nochmals schlagen kann / darf (geht ja nur wenn er zuvor schon geschlagen hat)
+	3) welcher Spieler ist dran --> wenn stein nach schlagen nochmals schlagen kann, ist noch kein Spielerwechsel
+	4) wenn stein nach schlagen nochmals schlagen kann, kann er das, es darf nur dieser Stein bewegt werden. --> Funktion "schlagenMoeglichNormal", am Anfang if-Abfrage
+	5) Damestein zeichnen: wenn Stein an Y Rand kommt, wird er zur Dame
+		- Dame kann rw fahren
+		- Damensymbol geht mit
+
+ - nächstes ToDo
+	1) fahrtüberprüfung diiagonal für Dame?
+	2) schlagen Dame?
+	3) überprüfung ob irgendwo geschlagen werden kann, (Schlagzwang)
