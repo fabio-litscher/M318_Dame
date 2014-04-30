@@ -65,8 +65,8 @@
 	5) Damestein zeichnen: wenn Stein an Y Rand kommt, wird er zur Dame
 		- Dame kann rw fahren
 		- Damensymbol geht mit
+		- Diagonale Länge wird überprüft
+		- Dame kann schlagen
 
  - nächstes ToDo
-	1) fahrtüberprüfung diiagonal für Dame?
-	2) schlagen Dame?
-	3) überprüfung ob irgendwo geschlagen werden kann, (Schlagzwang)
+	1) überprüfung ob irgendwo geschlagen werden kann, (Schlagzwang) --> Im Moment kann man mit einem anderen Stein normal fahren, auch wenn i wo geschlagen werden kann

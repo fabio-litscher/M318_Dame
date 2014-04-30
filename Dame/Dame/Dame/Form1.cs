@@ -119,7 +119,13 @@ namespace Dame
                 lastColor = 0;
                 zeichneSteine();
             }
-            else if (diagonaleDistanz(feldX, feldY) == 1)
+            else if (diagonaleDistanzDame(feldX, feldY) == 1)
+            {
+                fields[lastFieldX, lastFieldY, 2] = lastColor;
+                lastColor = 0;
+                zeichneSteine();
+            }
+            else if (diagonaleDistanzNormal(feldX, feldY) == 1)
             {
                 fields[lastFieldX, lastFieldY, 2] = lastColor;
                 lastColor = 0;
@@ -369,7 +375,7 @@ namespace Dame
             else return 0;
         }
 
-        public int diagonaleDistanz(int feldX, int feldY)
+        public int diagonaleDistanzNormal(int feldX, int feldY)
         {
             if (lastColor == 1)                                                         // weiss
             {
@@ -521,7 +527,7 @@ namespace Dame
 
 
         ///////////////////
-        /// Damen Regeln //
+        /// Regeln Dame ///
         ///////////////////
 
         public void zeichneDame(int x, int y)
@@ -539,6 +545,103 @@ namespace Dame
             drawFont.Dispose();
             drawBrush.Dispose();
             formGraphics.Dispose();
+        }
+
+        public int diagonaleDistanzDame(int feldX, int feldY)
+        {
+            if (lastColor != 0 && fields[lastPositionX, lastPositionY, 4] == 1)
+            {
+                int farbeGegner = -1;
+                if (lastColor == 1) farbeGegner = 2;
+                else if (lastColor == 2) farbeGegner = 1;
+
+                if (feldY > lastPositionY + 2 || feldY < lastPositionY - 2) return 1;        // ungültig
+
+                else if (feldY == lastPositionY + 2)                                    // wenn zwei Felder diagonal
+                {
+                    if (feldX < 2)                                                          // wenn links am Rand
+                    {
+                        if (fields[feldX + 1, feldY - 1, 2] == farbeGegner)                               // übersprungenes Feld ein gegnerischer Stein?
+                        {
+                            schlagen(feldX + 1, feldY - 1, feldX, feldY);                                         // wenn ja, schlage diesen, gültig zurückgeben
+                            return 0;
+                        }
+                        else return 1;                                                              // sonst ungültig zurückgeben
+                    }
+                    else if (feldX > 5)                                                     // wenn rechts am Rand
+                    {
+                        if (fields[feldX - 1, feldY - 1, 2] == farbeGegner)                               // übersprungenes Feld ein gegnerischer Stein?
+                        {
+                            schlagen(feldX - 1, feldY - 1, feldX, feldY);                                         // wenn ja, schlage diesen, gültig zurückgeben
+                            return 0;
+                        }
+                        else return 1;                                                              // sonst ungültig zurückgeben
+                    }
+                    else if (feldX < lastPositionX)
+                    {
+                        if (fields[feldX + 1, feldY - 1, 2] == farbeGegner)
+                        {
+                            schlagen(feldX + 1, feldY - 1, feldX, feldY);                                         // die selben abfragen nochmals, einfach wenn nicht am Rand
+                            return 0;
+                        }
+                        else return 1;
+                    }
+                    else if (feldX > lastPositionX)
+                    {
+                        if (fields[feldX - 1, feldY - 1, 2] == farbeGegner)
+                        {
+                            schlagen(feldX - 1, feldY - 1, feldX, feldY);
+                            return 0;
+                        }
+                        else return 1;
+                    }
+                    else return 1;  // ungültig
+                }
+
+
+                else if (feldY == lastPositionY - 2)
+                {
+                    if (feldX < 2)
+                    {
+                        if (fields[feldX + 1, feldY + 1, 2] == farbeGegner)
+                        {
+                            schlagen(feldX + 1, feldY + 1, feldX, feldY);
+                            return 0;
+                        }
+                        else return 1;
+                    }
+                    else if (feldX > 5)     // rand rechts
+                    {
+                        if (fields[feldX - 1, feldY + 1, 2] == farbeGegner)
+                        {
+                            schlagen(feldX - 1, feldY + 1, feldX, feldY);
+                            return 0;
+                        }
+                        else return 1;
+                    }
+                    else if (feldX < lastPositionX)
+                    {
+                        if (fields[feldX + 1, feldY + 1, 2] == farbeGegner)
+                        {
+                            schlagen(feldX + 1, feldY + 1, feldX, feldY);
+                            return 0;
+                        }
+                        else return 1;
+                    }
+                    else if (feldX > lastPositionX)
+                    {
+                        if (fields[feldX - 1, feldY + 1, 2] == farbeGegner)
+                        {
+                            schlagen(feldX - 1, feldY + 1, feldX, feldY);
+                            return 0;
+                        }
+                        else return 1;
+                    }
+                    else return 1;                                              // ungültig
+                }
+                else return 0;
+            }
+            else return 0;
         }
 
     }
