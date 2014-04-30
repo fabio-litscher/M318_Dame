@@ -131,9 +131,16 @@ namespace Dame
                 lastColor = 0;
                 zeichneSteine();
             }
+            else if (schongeschlagen == 0 && schlagenMoeglich() == 1)
+            {
+                Console.WriteLine("Wenn sie schlagen können, müssen sie!");
+                fields[lastFieldX, lastFieldY, 2] = lastColor;
+                lastColor = 0;
+                zeichneSteine();
+            }
             else
             {
-                if (schlagenMoeglichNormal(feldX, feldY) == 1)    // wenn kein weiteres schlagen mehr möglich
+                if (weiterSchlagenMoeglichNormal(feldX, feldY) == 1)    // wenn kein weiteres schlagen mehr möglich
                 {
                     // spielerwechsel, wenn kein weiteres schlagen mehr möglich ist
                     if (lastColor == 1) spieler = 2;
@@ -469,7 +476,7 @@ namespace Dame
                         }
                         else return 1;
                     }
-                    else return 1;                                              // ungültig
+                    else return 1;      // ungültig
                 }
                 else return 0;
             }
@@ -484,7 +491,7 @@ namespace Dame
             schlagFeldY = feldY;
         }
 
-        public int schlagenMoeglichNormal(int feldX, int feldY)
+        public int weiterSchlagenMoeglichNormal(int feldX, int feldY)
         {
             if (lastColor == 1)  // wenn spieler weiss
             {
@@ -525,6 +532,83 @@ namespace Dame
             else return 1;   // weiteres schlagen nicht möglich
         }
 
+        public int schlagenMoeglich()   // überprüfung ob irgendwo geschlagen werden kann, nur diese Varianten sollen dann möglich sein
+        {
+            
+            int farbeGegner = 0;
+
+            for (int x = 0; x < 8; x++)
+            {
+                for (int y = 0; y < 8; y++)
+                {
+                    if (fields[x, y, 2] == 1) farbeGegner = 2;
+                    else if (fields[x, y, 2] == 2) farbeGegner = 1;
+
+                    if (fields[x, y, 2] != 0)
+                    {
+                        if (x < 2)
+                        {
+                            if (fields[x, y, 4] == 1)
+                            {
+                                if (fields[x + 1, y + 1, 2] == farbeGegner && fields[x + 2, y + 2, 2] == 0) return 0;   // schlagen möglich
+                                else if (fields[x + 1, y - 1, 2] == farbeGegner && fields[x + 2, y - 2, 2] == 0) return 0;   // schlagen möglich
+                            }
+                            else if (fields[x, y, 2] == 1)
+                            {
+                                if (fields[x + 1, y + 1, 2] == farbeGegner && fields[x + 2, y + 2, 2] == 0) return 0;   // schlagen möglich
+                            }
+                            else if (fields[x, y, 2] == 2)
+                            {
+                                if (fields[x + 1, y - 1, 2] == farbeGegner && fields[x + 2, y - 2, 2] == 0) return 0;   // schlagen möglich
+                            }
+                            else return 1;  // schlagen nirgens möglich
+                        }
+
+                        else if (x > 5)
+                        {
+                            if (fields[x, y, 4] == 1)
+                            {
+                                if (fields[x - 1, y + 1, 2] == farbeGegner && fields[x - 2, y + 2, 2] == 0) return 0;   // schlagen möglich
+                                else if (fields[x - 1, y - 1, 2] == farbeGegner && fields[x - 2, y - 2, 2] == 0) return 0;   // schlagen möglich
+                            }
+                            else if (fields[x, y, 2] == 1)
+                            {
+                                if (fields[x - 1, y + 1, 2] == farbeGegner && fields[x - 2, y + 2, 2] == 0) return 0;   // schlagen möglich
+                            }
+                            else if (fields[x, y, 2] == 2)
+                            {
+                                if (fields[x - 1, y - 1, 2] == farbeGegner && fields[x - 2, y - 2, 2] == 0) return 0;   // schlagen möglich
+                            }
+                        }
+
+                        else
+                        {
+                            if (fields[x, y, 4] == 1)
+                            {
+                                if (fields[x + 1, y + 1, 2] == farbeGegner && fields[x + 2, y + 2, 2] == 0) return 0;   // schlagen möglich
+                                else if (fields[x - 1, y + 1, 2] == farbeGegner && fields[x - 2, y + 2, 2] == 0) return 0;   // schlagen möglich
+                                else if (fields[x + 1, y - 1, 2] == farbeGegner && fields[x + 2, y - 2, 2] == 0) return 0;   // schlagen möglich
+                                else if (fields[x - 1, y - 1, 2] == farbeGegner && fields[x - 2, y - 2, 2] == 0) return 0;   // schlagen möglich
+                            }
+                            else if (fields[x, y, 2] == 1)
+                            {
+                                if (fields[x + 1, y + 1, 2] == farbeGegner && fields[x + 2, y + 2, 2] == 0) return 0;   // schlagen möglich
+                                else if (fields[x - 1, y + 1, 2] == farbeGegner && fields[x - 2, y + 2, 2] == 0) return 0;   // schlagen möglich
+                            }
+                            else if (fields[x, y, 2] == 2)
+                            {
+                                if (fields[x + 1, y - 1, 2] == farbeGegner && fields[x + 2, y - 2, 2] == 0) return 0;   // schlagen möglich
+                                else if (fields[x - 1, y - 1, 2] == farbeGegner && fields[x - 2, y - 2, 2] == 0) return 0;   // schlagen möglich
+                            }
+                            else return 1;  // schlagen nirgens möglich
+                        }
+                    }
+                }
+            }
+            return 1;   // kein schlagen möglich
+        }
+
+
 
         ///////////////////
         /// Regeln Dame ///
@@ -538,8 +622,6 @@ namespace Dame
             string drawString = "D";
             System.Drawing.Font drawFont = new System.Drawing.Font("Arial", 25, FontStyle.Bold);
             System.Drawing.SolidBrush drawBrush = new System.Drawing.SolidBrush(System.Drawing.Color.Black);
-            //float x = 150.0F;
-            //float y = 50.0F;
             System.Drawing.StringFormat drawFormat = new System.Drawing.StringFormat();
             formGraphics.DrawString(drawString, drawFont, drawBrush, x + 8, y + 6, drawFormat);
             drawFont.Dispose();
