@@ -18,6 +18,7 @@ namespace Dame
 
         int[, ,] fields = new int[8, 8, 5];     // 3 Dimensionales Array: X, Y, Spielstein (0=kein Stein, 1=weiss, 2=rot), zulässiges Feld (0=ja, 1=nein), Dame (0=nein, 1=ja)
         int lastColor;
+        int firstRound = 1;
         int lastFieldX = -1, lastFieldY = -1;
         int lastPositionX = -1, lastPositionY = -1;
         int spieler = 1;   // 1 = weiss, 2 = rot    Spieler weiss beginnz immer
@@ -131,15 +132,23 @@ namespace Dame
                 lastColor = 0;
                 zeichneSteine();
             }
-            else if (schongeschlagen == 0 && schlagenMoeglich() == 1)
+           /* else if (firstRound != 1 && schlagenMoeglich() == 1)
             {
-                Console.WriteLine("Wenn sie schlagen können, müssen sie!");
+                Console.WriteLine("schlagen möglich!");
                 fields[lastFieldX, lastFieldY, 2] = lastColor;
                 lastColor = 0;
                 zeichneSteine();
-            }
+            }*/
             else
             {
+                /*
+                if(fields[feldX, feldY, 4] == 1 && weiterSchlagenMoeglichDame(feldX, feldY) == 1)   // feldX == dame oder lastPositionX == dame??
+                {
+                    if (lastColor == 1) spieler = 2;
+                    else if (lastColor == 2) spieler = 1;
+                    schongeschlagen = 0;
+                }*/
+
                 if (weiterSchlagenMoeglichNormal(feldX, feldY) == 1)    // wenn kein weiteres schlagen mehr möglich
                 {
                     // spielerwechsel, wenn kein weiteres schlagen mehr möglich ist
@@ -152,6 +161,7 @@ namespace Dame
                 {
                     case 0:
                         fields[feldX, feldY, 2] = lastColor;
+                        if (firstRound == 1) firstRound = 0;
                         if (fields[lastPositionX, lastPositionY, 4] == 1) fields[feldX, feldY, 4] = 1;
                         fields[lastPositionX, lastPositionY, 4] = 0;
                         lastColor = 0;
@@ -493,12 +503,69 @@ namespace Dame
 
         public int weiterSchlagenMoeglichNormal(int feldX, int feldY)
         {
-            if (lastColor == 1)  // wenn spieler weiss
+            int farbeGegner = 0;
+            if (lastColor == 1) farbeGegner = 2;
+            else if (lastColor == 2) farbeGegner = 1;
+
+            if (firstRound != 1 && fields[lastPositionX, lastPositionY, 4] == 1)
+            {
+                if (feldX < 2)              // wenn am linken zu nahe Rand
+                {
+                    if (feldY > 5)
+                    {
+                        if (fields[feldX + 1, feldY - 1, 2] == farbeGegner && fields[feldX + 2, feldY - 2, 2] == 0 && schongeschlagen != 0) return 0;
+                        else return 1;
+                    }
+                    else if (feldY < 2)
+                    {
+                        if (fields[feldX + 1, feldY + 1, 2] == farbeGegner && fields[feldX + 2, feldY + 2, 2] == 0 && schongeschlagen != 0) return 0;
+                        else return 1;
+                    }
+                    else if (fields[feldX + 1, feldY + 1, 2] == farbeGegner && fields[feldX + 2, feldY + 2, 2] == 0 && schongeschlagen != 0) return 0;
+                    else if (fields[feldX + 1, feldY - 1, 2] == farbeGegner && fields[feldX + 2, feldY - 2, 2] == 0 && schongeschlagen != 0) return 0;
+                    else return 1;
+                }
+                else if (feldX > 5)              // wenn am linken zu nahe Rand
+                {
+                    if (feldY > 5)
+                    {
+                        if (fields[feldX - 1, feldY - 1, 2] == farbeGegner && fields[feldX - 2, feldY - 2, 2] == 0 && schongeschlagen != 0) return 0;
+                        else return 1;
+                    }
+                    else if (feldY < 2)
+                    {
+                        if (fields[feldX - 1, feldY + 1, 2] == farbeGegner && fields[feldX - 2, feldY + 2, 2] == 0 && schongeschlagen != 0) return 0;
+                        else return 1;
+                    }
+                    if (fields[feldX - 1, feldY + 1, 2] == farbeGegner && fields[feldX - 2, feldY + 2, 2] == 0 && schongeschlagen != 0) return 0;
+                    else if (fields[feldX - 1, feldY - 1, 2] == farbeGegner && fields[feldX - 2, feldY - 2, 2] == 0 && schongeschlagen != 0) return 0;
+                    else return 1;
+                }
+                else if (feldY > 5)
+                {
+                    if (fields[feldX + 1, feldY - 1, 2] == farbeGegner && fields[feldX + 2, feldY - 2, 2] == 0 && schongeschlagen != 0) return 0;
+                    else if (fields[feldX - 1, feldY - 1, 2] == farbeGegner && fields[feldX - 2, feldY - 2, 2] == 0 && schongeschlagen != 0) return 0;
+                    else return 1;
+                }
+                else if (feldY < 2)
+                {
+                    if (fields[feldX + 1, feldY + 1, 2] == farbeGegner && fields[feldX + 2, feldY + 2, 2] == 0 && schongeschlagen != 0) return 0;
+                    else if (fields[feldX - 1, feldY + 1, 2] == farbeGegner && fields[feldX - 2, feldY + 2, 2] == 0 && schongeschlagen != 0) return 0;
+                    else return 1;
+                }
+                else if (fields[feldX + 1, feldY + 1, 2] == farbeGegner && fields[feldX + 2, feldY + 2, 2] == 0 && schongeschlagen != 0) return 0;
+                else if (fields[feldX + 1, feldY - 1, 2] == farbeGegner && fields[feldX + 2, feldY - 2, 2] == 0 && schongeschlagen != 0) return 0;
+                else if (fields[feldX - 1, feldY + 1, 2] == farbeGegner && fields[feldX - 2, feldY + 2, 2] == 0 && schongeschlagen != 0) return 0;
+                else if (fields[feldX - 1, feldY - 1, 2] == farbeGegner && fields[feldX - 2, feldY - 2, 2] == 0 && schongeschlagen != 0) return 0;
+                else return 1;
+            }
+
+            else if (lastColor == 1)  // wenn spieler weiss
             {
                 if (feldY > 5) return 1;    // spielfeldrand unten zu nahe
                 else if (feldX < 2)              // wenn am linken zu nahe Rand
                 {
-                    if (fields[feldX + 1, feldY + 1, 2] == 2 && fields[feldX + 2, feldY + 2, 2] == 0 &&schongeschlagen != 0) return 0;
+                    if (fields[feldX + 1, feldY + 1, 2] == 2 && fields[feldX + 2, feldY + 2, 2] == 0 && schongeschlagen != 0) return 0;
                     else return 1;
                 }
                 else if (feldX > 5)              // wenn am linken zu nahe Rand
@@ -513,6 +580,7 @@ namespace Dame
 
             else if (lastColor == 2)    // wenn spieler rot
             {
+                Console.WriteLine("rot");
                 if (feldY < 2) return 1;    // spielfeldrand unten zu nahe
                 else if (feldX < 2)              // wenn am linken zu nahe Rand
                 {

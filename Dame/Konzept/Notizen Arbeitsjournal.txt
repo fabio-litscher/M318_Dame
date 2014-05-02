@@ -71,4 +71,24 @@
  - nächstes ToDo
 	1) überprüfung ob irgendwo geschlagen werden kann, (Schlagzwang) --> Im Moment kann man mit einem anderen Stein normal fahren, auch wenn i wo geschlagen werden kann
 		- funktion gemacht, greift aber noch nicht
-	2) Spielende, wenn von einer Farbe keine Steine mehr übrig sind
+	2) weiterschlagen Dame
+	3) Spielende, wenn von einer Farbe keine Steine mehr übrig sind
+
+
+=================================
+ab jetzt zählt
+=================================
+
+02.05.2014
+ - Regeln
+	1) dame doppelschlagen
+
+ - nächstes: 
+	1) kann man dame nur mit dame schlagen?
+	2) schlagzwang
+	3) spielende
+
+ - Doku:
+	1) arbeitsjournal nur kurz nachführen
+	2) doku kann abgespeckt sein
+		- punkte wie ergonomie etc. können weggelassen werden
