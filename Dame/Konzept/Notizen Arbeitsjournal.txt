@@ -81,10 +81,11 @@ ab jetzt zählt
 
 02.05.2014
  - Regeln
-	1) dame doppelschlagen
+	1) dame doppelschlagen funktioniert
+ - Statussitzung mit Herr Vogel
 
  - nächstes: 
-	1) kann man dame nur mit dame schlagen?
+	1) dame nur mit dame schlagen
 	2) schlagzwang
 	3) spielende
 
@@ -92,3 +93,7 @@ ab jetzt zählt
 	1) arbeitsjournal nur kurz nachführen
 	2) doku kann abgespeckt sein
 		- punkte wie ergonomie etc. können weggelassen werden
+
+
+04.05.2014
+ - Protokoll Statussitzung geschrieben und versendet
