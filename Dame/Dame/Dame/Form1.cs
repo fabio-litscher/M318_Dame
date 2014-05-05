@@ -12,10 +12,6 @@ namespace Dame
 {
     public partial class Form1 : Form
     {
-        Array Ar = new Array();
-        Visualize Vs = new Visualize();
-        Helper He = new Helper();
-
         int[, ,] fields = new int[8, 8, 5];     // 3 Dimensionales Array: X, Y, Spielstein (0=kein Stein, 1=weiss, 2=rot), zulässiges Feld (0=ja, 1=nein), Dame (0=nein, 1=ja)
         int lastColor;
         int firstRound = 1;
