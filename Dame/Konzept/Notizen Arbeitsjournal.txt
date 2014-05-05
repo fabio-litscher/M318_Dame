@@ -50,7 +50,7 @@
 	4) Funktion "schlagenMoeglichNormal" ausprogrammiert, noch nicht in Verwenndung. --> überüft ob schlagen möglich ist
 
 - nächstes ToDo
-	1) schlagen überarbeiten!! es darf nur auf eine diagonale nach hinten geschaut werden sonst wird je nach situation ein stein zu viel gefressen!
+	1) schlagen überarbeiten!! es darf nur auf eine diagonale nach hinten geschaut werden sonst wird je nach situation ein stein zu viel gefressen! (evtl. mit überprüfung ob man nach rechts diagonal oder nach links diagonal gefahren ist)
 	2) Problem mit schlagen am Rand und zu lange Diagonale Züge am Rand beheben!
 	3) welcher spieler ist dran fertigstellen 
 
@@ -97,3 +97,8 @@ ab jetzt zählt
 
 04.05.2014
  - Protokoll Statussitzung geschrieben und versendet
+
+
+05.05.2014
+ - Dame beim vw schlagen, stein springt zurück anstatt über den geschlagenen Stein, "diagonaleDistanzDame" problem?, ist das auch bei roter Dame? ist das nur am Rand? ist das auch wenn "nur dame kann dame schlagen" noch nicht aktiv war??
+ - kann bei diagonaleFahrt  (schlagen) oberer teil mit (y < 2) und (y > 5) weggelassen werden??

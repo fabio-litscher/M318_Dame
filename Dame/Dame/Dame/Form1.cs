@@ -137,15 +137,7 @@ namespace Dame
             }*/
             else
             {
-                /*
-                if(fields[feldX, feldY, 4] == 1 && weiterSchlagenMoeglichDame(feldX, feldY) == 1)   // feldX == dame oder lastPositionX == dame??
-                {
-                    if (lastColor == 1) spieler = 2;
-                    else if (lastColor == 2) spieler = 1;
-                    schongeschlagen = 0;
-                }*/
-
-                if (weiterSchlagenMoeglichNormal(feldX, feldY) == 1)    // wenn kein weiteres schlagen mehr möglich
+                if (weiterSchlagenMoeglich(feldX, feldY) == 1)    // wenn kein weiteres schlagen mehr möglich
                 {
                     // spielerwechsel, wenn kein weiteres schlagen mehr möglich ist
                     if (lastColor == 1) spieler = 2;
@@ -402,8 +394,20 @@ namespace Dame
                     {
                         if (fields[feldX + 1, feldY - 1, 2] == 2)                               // übersprungenes Feld ein gegnerischer Stein?
                         {
-                            schlagen(feldX + 1, feldY - 1, feldX, feldY);                                         // wenn ja, schlage diesen, gültig zurückgeben
-                            return 0;
+                            if (fields[feldX + 1, feldY - 1, 4] == 1)   // muss noch überall angepasst werden!!                        // wenn damestein übersprungen, muss Dame sein zum schlagen
+                            {
+                                if (fields[feldX, feldY, 4] == 1)
+                                {
+                                    schlagen(feldX + 1, feldY - 1, feldX, feldY);
+                                    return 0;
+                                }
+                                else return 1;
+                            }
+                            else
+                            {
+                                schlagen(feldX + 1, feldY - 1, feldX, feldY);                                         // wenn ja, schlage diesen, gültig zurückgeben
+                                return 0;
+                            }
                         }
                         else return 1;                                                              // sonst ungültig zurückgeben
                     }
@@ -411,8 +415,20 @@ namespace Dame
                     {
                         if (fields[feldX - 1, feldY - 1, 2] == 2)                               // übersprungenes Feld ein gegnerischer Stein?
                         {
-                            schlagen(feldX - 1, feldY - 1, feldX, feldY);                                         // wenn ja, schlage diesen, gültig zurückgeben
-                            return 0;
+                            if (fields[feldX - 1, feldY - 1, 4] == 1)
+                            {
+                                if (fields[feldX, feldY, 4] == 1)
+                                {
+                                    schlagen(feldX - 1, feldY - 1, feldX, feldY);
+                                    return 0;
+                                }
+                                else return 1;
+                            }
+                            else
+                            {
+                                schlagen(feldX - 1, feldY - 1, feldX, feldY);                                         // wenn ja, schlage diesen, gültig zurückgeben
+                                return 0;
+                            }
                         }
                         else return 1;                                                              // sonst ungültig zurückgeben
                     }
@@ -420,8 +436,20 @@ namespace Dame
                     {
                         if (fields[feldX + 1, feldY - 1, 2] == 2)
                         {
-                            schlagen(feldX + 1, feldY - 1, feldX, feldY);                                         // die selben abfragen nochmals, einfach wenn nicht am Rand
-                            return 0;
+                            if (fields[feldX + 1, feldY - 1, 4] == 1)   // muss noch überall angepasst werden!!                        // wenn damestein übersprungen, muss Dame sein zum schlagen
+                            {
+                                if (fields[feldX, feldY, 4] == 1)
+                                {
+                                    schlagen(feldX + 1, feldY - 1, feldX, feldY);
+                                    return 0;
+                                }
+                                else return 1;
+                            }
+                            else
+                            {
+                                schlagen(feldX + 1, feldY - 1, feldX, feldY);                                         // wenn ja, schlage diesen, gültig zurückgeben
+                                return 0;
+                            }
                         }
                         else return 1;
                     }
@@ -429,8 +457,20 @@ namespace Dame
                     {
                         if (fields[feldX - 1, feldY - 1, 2] == 2)
                         {
-                            schlagen(feldX - 1, feldY - 1, feldX, feldY);
-                            return 0;
+                            if (fields[feldX - 1, feldY - 1, 4] == 1)
+                            {
+                                if (fields[feldX, feldY, 4] == 1)
+                                {
+                                    schlagen(feldX - 1, feldY - 1, feldX, feldY);
+                                    return 0;
+                                }
+                                else return 1;
+                            }
+                            else
+                            {
+                                schlagen(feldX - 1, feldY - 1, feldX, feldY);                                         // wenn ja, schlage diesen, gültig zurückgeben
+                                return 0;
+                            }
                         }
                         else return 1;
                     }
@@ -468,8 +508,20 @@ namespace Dame
                     {
                         if (fields[feldX + 1, feldY + 1, 2] == 1)
                         {
-                            schlagen(feldX + 1, feldY + 1, feldX, feldY);
-                            return 0;
+                            if (fields[feldX + 1, feldY + 1, 4] == 1)
+                            {
+                                if (fields[feldX, feldY, 4] == 1)
+                                {
+                                    schlagen(feldX + 1, feldY + 1, feldX, feldY);
+                                    return 0;
+                                }
+                                else return 1;
+                            }
+                            else
+                            {
+                                schlagen(feldX + 1, feldY + 1, feldX, feldY);
+                                return 0;
+                            }
                         }
                         else return 1;
                     }
@@ -477,8 +529,20 @@ namespace Dame
                     {
                         if (fields[feldX - 1, feldY + 1, 2] == 1)
                         {
-                            schlagen(feldX - 1, feldY + 1, feldX, feldY);
-                            return 0;
+                            if (fields[feldX - 1, feldY + 1, 4] == 1)
+                            {
+                                if (fields[feldX, feldY, 4] == 1)
+                                {
+                                    schlagen(feldX - 1, feldY + 1, feldX, feldY);
+                                    return 0;
+                                }
+                                else return 1;
+                            }
+                            else
+                            {
+                                schlagen(feldX - 1, feldY + 1, feldX, feldY);
+                                return 0;
+                            }
                         }
                         else return 1;
                     }
@@ -497,7 +561,7 @@ namespace Dame
             schlagFeldY = feldY;
         }
 
-        public int weiterSchlagenMoeglichNormal(int feldX, int feldY)
+        public int weiterSchlagenMoeglich(int feldX, int feldY)
         {
             int farbeGegner = 0;
             if (lastColor == 1) farbeGegner = 2;
@@ -712,7 +776,7 @@ namespace Dame
                             schlagen(feldX + 1, feldY - 1, feldX, feldY);                                         // wenn ja, schlage diesen, gültig zurückgeben
                             return 0;
                         }
-                        else return 1;                                                              // sonst ungültig zurückgeben
+                        else return 1;        // evtl müssen diese weg??                                                      // sonst ungültig zurückgeben
                     }
                     else if (feldX > 5)                                                     // wenn rechts am Rand
                     {
