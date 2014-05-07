@@ -128,13 +128,13 @@ namespace Dame
                 lastColor = 0;
                 zeichneSteine();
             }
-           /* else if (firstRound != 1 && schlagenMoeglich() == 1)
+            else if (firstRound != 1 && lastColor != 0 && schlagenMoeglich() == 0)
             {
                 Console.WriteLine("schlagen möglich!");
                 fields[lastFieldX, lastFieldY, 2] = lastColor;
                 lastColor = 0;
                 zeichneSteine();
-            }*/
+            }
             else
             {
                 if (weiterSchlagenMoeglich(feldX, feldY) == 1)    // wenn kein weiteres schlagen mehr möglich
@@ -337,10 +337,7 @@ namespace Dame
 
         public int fahrtrichtung(int feldX, int feldY)
         {
-            if (lastColor != 0)
-            {
-                if (fields[lastPositionX, lastPositionY, 4] == 1) return 0;
-            }
+            if (lastColor != 0 && fields[lastPositionX, lastPositionY, 4] == 1) return 0;
             
             // Y-Achse, überprüfung, dass nur vw gefahren wird
             if (lastFieldY == -1 && lastFieldY != feldY)   // wenn erster Zug, immer vorwärts
@@ -382,6 +379,8 @@ namespace Dame
 
         public int diagonaleDistanzNormal(int feldX, int feldY)
         {
+            if (lastColor != 0 && fields[lastPositionX, lastPositionY, 4] == 1) return 0;
+
             if (lastColor == 1)                                                         // weiss
             {
                 if (feldY > lastPositionY + 2)                                          // wenn zu grosse Distanz
@@ -390,7 +389,7 @@ namespace Dame
                 }
                 else if (feldY == lastPositionY + 2)                                    // wenn zwei Felder diagonal
                 {
-                    if (feldX < 2)                                                          // wenn links am Rand
+                    /*if (feldX < 2)                                                          // wenn links am Rand
                     {
                         if (fields[feldX + 1, feldY - 1, 2] == 2)                               // übersprungenes Feld ein gegnerischer Stein?
                         {
@@ -431,8 +430,9 @@ namespace Dame
                             }
                         }
                         else return 1;                                                              // sonst ungültig zurückgeben
-                    }
-                    else if (feldX < lastPositionX)
+                    }*/
+                    //else
+                    if (feldX < lastPositionX)
                     {
                         if (fields[feldX + 1, feldY - 1, 2] == 2)
                         {
@@ -486,12 +486,24 @@ namespace Dame
                 }
                 else if (feldY == lastPositionY - 2)
                 {
-                    if (feldX < 2)
+                    /*if (feldX < 2)
                     {
                         if (fields[feldX + 1, feldY + 1, 2] == 1)
                         {
-                            schlagen(feldX + 1, feldY + 1, feldX, feldY);
-                            return 0;
+                            if (fields[feldX + 1, feldY + 1, 4] == 1)   // muss noch überall angepasst werden!!                        // wenn damestein übersprungen, muss Dame sein zum schlagen
+                            {
+                                if (fields[feldX, feldY, 4] == 1)
+                                {
+                                    schlagen(feldX + 1, feldY + 1, feldX, feldY);
+                                    return 0;
+                                }
+                                else return 1;
+                            }
+                            else
+                            {
+                                schlagen(feldX + 1, feldY + 1, feldX, feldY);
+                                return 0;
+                            }
                         }
                         else return 1;
                     }
@@ -499,12 +511,25 @@ namespace Dame
                     {
                         if (fields[feldX - 1, feldY + 1, 2] == 1)
                         {
-                            schlagen(feldX - 1, feldY + 1, feldX, feldY);
-                            return 0;
+                            if (fields[feldX - 1, feldY + 1, 4] == 1)
+                            {
+                                if (fields[feldX, feldY, 4] == 1)
+                                {
+                                    schlagen(feldX - 1, feldY + 1, feldX, feldY);
+                                    return 0;
+                                }
+                                else return 1;
+                            }
+                            else
+                            {
+                                schlagen(feldX - 1, feldY + 1, feldX, feldY);
+                                return 0;
+                            }
                         }
                         else return 1;
                     }
-                    else if (feldX < lastPositionX)
+                    else */
+                    if (feldX < lastPositionX)
                     {
                         if (fields[feldX + 1, feldY + 1, 2] == 1)
                         {
@@ -640,7 +665,6 @@ namespace Dame
 
             else if (lastColor == 2)    // wenn spieler rot
             {
-                Console.WriteLine("rot");
                 if (feldY < 2) return 1;    // spielfeldrand unten zu nahe
                 else if (feldX < 2)              // wenn am linken zu nahe Rand
                 {
