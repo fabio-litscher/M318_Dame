@@ -389,49 +389,6 @@ namespace Dame
                 }
                 else if (feldY == lastPositionY + 2)                                    // wenn zwei Felder diagonal
                 {
-                    /*if (feldX < 2)                                                          // wenn links am Rand
-                    {
-                        if (fields[feldX + 1, feldY - 1, 2] == 2)                               // übersprungenes Feld ein gegnerischer Stein?
-                        {
-                            if (fields[feldX + 1, feldY - 1, 4] == 1)   // muss noch überall angepasst werden!!                        // wenn damestein übersprungen, muss Dame sein zum schlagen
-                            {
-                                if (fields[feldX, feldY, 4] == 1)
-                                {
-                                    schlagen(feldX + 1, feldY - 1, feldX, feldY);
-                                    return 0;
-                                }
-                                else return 1;
-                            }
-                            else
-                            {
-                                schlagen(feldX + 1, feldY - 1, feldX, feldY);                                         // wenn ja, schlage diesen, gültig zurückgeben
-                                return 0;
-                            }
-                        }
-                        else return 1;                                                              // sonst ungültig zurückgeben
-                    }
-                    else if (feldX > 5)                                                     // wenn rechts am Rand
-                    {
-                        if (fields[feldX - 1, feldY - 1, 2] == 2)                               // übersprungenes Feld ein gegnerischer Stein?
-                        {
-                            if (fields[feldX - 1, feldY - 1, 4] == 1)
-                            {
-                                if (fields[feldX, feldY, 4] == 1)
-                                {
-                                    schlagen(feldX - 1, feldY - 1, feldX, feldY);
-                                    return 0;
-                                }
-                                else return 1;
-                            }
-                            else
-                            {
-                                schlagen(feldX - 1, feldY - 1, feldX, feldY);                                         // wenn ja, schlage diesen, gültig zurückgeben
-                                return 0;
-                            }
-                        }
-                        else return 1;                                                              // sonst ungültig zurückgeben
-                    }*/
-                    //else
                     if (feldX < lastPositionX)
                     {
                         if (fields[feldX + 1, feldY - 1, 2] == 2)
@@ -486,49 +443,6 @@ namespace Dame
                 }
                 else if (feldY == lastPositionY - 2)
                 {
-                    /*if (feldX < 2)
-                    {
-                        if (fields[feldX + 1, feldY + 1, 2] == 1)
-                        {
-                            if (fields[feldX + 1, feldY + 1, 4] == 1)   // muss noch überall angepasst werden!!                        // wenn damestein übersprungen, muss Dame sein zum schlagen
-                            {
-                                if (fields[feldX, feldY, 4] == 1)
-                                {
-                                    schlagen(feldX + 1, feldY + 1, feldX, feldY);
-                                    return 0;
-                                }
-                                else return 1;
-                            }
-                            else
-                            {
-                                schlagen(feldX + 1, feldY + 1, feldX, feldY);
-                                return 0;
-                            }
-                        }
-                        else return 1;
-                    }
-                    else if (feldX > 5)     // rand rechts
-                    {
-                        if (fields[feldX - 1, feldY + 1, 2] == 1)
-                        {
-                            if (fields[feldX - 1, feldY + 1, 4] == 1)
-                            {
-                                if (fields[feldX, feldY, 4] == 1)
-                                {
-                                    schlagen(feldX - 1, feldY + 1, feldX, feldY);
-                                    return 0;
-                                }
-                                else return 1;
-                            }
-                            else
-                            {
-                                schlagen(feldX - 1, feldY + 1, feldX, feldY);
-                                return 0;
-                            }
-                        }
-                        else return 1;
-                    }
-                    else */
                     if (feldX < lastPositionX)
                     {
                         if (fields[feldX + 1, feldY + 1, 2] == 1)
@@ -686,7 +600,6 @@ namespace Dame
 
         public int schlagenMoeglich()   // überprüfung ob irgendwo geschlagen werden kann, nur diese Varianten sollen dann möglich sein
         {
-            
             int farbeGegner = 0;
 
             for (int x = 0; x < 8; x++)
@@ -702,35 +615,36 @@ namespace Dame
                         {
                             if (fields[x, y, 4] == 1)
                             {
-                                if (fields[x + 1, y + 1, 2] == farbeGegner && fields[x + 2, y + 2, 2] == 0) return 0;   // schlagen möglich
-                                else if (fields[x + 1, y - 1, 2] == farbeGegner && fields[x + 2, y - 2, 2] == 0) return 0;   // schlagen möglich
+                                if (fields[x + 1, y + 1, 2] == farbeGegner && fields[x + 2, y + 2, 2] == 0) return 0;             // schlagen möglich
+                                else if (fields[x + 1, y - 1, 2] == farbeGegner && fields[x + 2, y - 2, 2] == 0) return 0;             // schlagen möglich
                             }
-                            else if (fields[x, y, 2] == 1)
+                            else if (spieler == 1 && fields[x, y, 2] == 1)
                             {
-                                if (fields[x + 1, y + 1, 2] == farbeGegner && fields[x + 2, y + 2, 2] == 0) return 0;   // schlagen möglich
+                                if (fields[x + 1, y + 1, 2] == farbeGegner && fields[x + 2, y + 2, 2] == 0) return 0;             // schlagen möglich
                             }
-                            else if (fields[x, y, 2] == 2)
+                            else if (spieler == 2 && fields[x, y, 2] == 2)
                             {
-                                if (fields[x + 1, y - 1, 2] == farbeGegner && fields[x + 2, y - 2, 2] == 0) return 0;   // schlagen möglich
+                                if (fields[x + 1, y - 1, 2] == farbeGegner && fields[x + 2, y - 2, 2] == 0) return 0;             // schlagen möglich
                             }
-                            else return 1;  // schlagen nirgens möglich
+                            else return 1;                                                  // schlagen nirgens möglich
                         }
 
                         else if (x > 5)
                         {
                             if (fields[x, y, 4] == 1)
                             {
-                                if (fields[x - 1, y + 1, 2] == farbeGegner && fields[x - 2, y + 2, 2] == 0) return 0;   // schlagen möglich
-                                else if (fields[x - 1, y - 1, 2] == farbeGegner && fields[x - 2, y - 2, 2] == 0) return 0;   // schlagen möglich
+                                if (fields[x - 1, y + 1, 2] == farbeGegner && fields[x - 2, y + 2, 2] == 0) return 0;             // schlagen möglich
+                                else if (fields[x - 1, y - 1, 2] == farbeGegner && fields[x - 2, y - 2, 2] == 0) return 0;             // schlagen möglich
                             }
-                            else if (fields[x, y, 2] == 1)
+                            else if (spieler == 1 && fields[x, y, 2] == 1)
                             {
-                                if (fields[x - 1, y + 1, 2] == farbeGegner && fields[x - 2, y + 2, 2] == 0) return 0;   // schlagen möglich
+                                if (fields[x - 1, y + 1, 2] == farbeGegner && fields[x - 2, y + 2, 2] == 0) return 0;             // schlagen möglich
                             }
-                            else if (fields[x, y, 2] == 2)
+                            else if (spieler == 2 && fields[x, y, 2] == 2)
                             {
-                                if (fields[x - 1, y - 1, 2] == farbeGegner && fields[x - 2, y - 2, 2] == 0) return 0;   // schlagen möglich
+                                if (fields[x - 1, y - 1, 2] == farbeGegner && fields[x - 2, y - 2, 2] == 0) return 0;             // schlagen möglich
                             }
+                            else return 1;
                         }
 
                         else
@@ -742,12 +656,12 @@ namespace Dame
                                 else if (fields[x + 1, y - 1, 2] == farbeGegner && fields[x + 2, y - 2, 2] == 0) return 0;   // schlagen möglich
                                 else if (fields[x - 1, y - 1, 2] == farbeGegner && fields[x - 2, y - 2, 2] == 0) return 0;   // schlagen möglich
                             }
-                            else if (fields[x, y, 2] == 1)
+                            else if (spieler == 1 && fields[x, y, 2] == 1)
                             {
                                 if (fields[x + 1, y + 1, 2] == farbeGegner && fields[x + 2, y + 2, 2] == 0) return 0;   // schlagen möglich
                                 else if (fields[x - 1, y + 1, 2] == farbeGegner && fields[x - 2, y + 2, 2] == 0) return 0;   // schlagen möglich
                             }
-                            else if (fields[x, y, 2] == 2)
+                            else if (spieler == 2 && fields[x, y, 2] == 2)
                             {
                                 if (fields[x + 1, y - 1, 2] == farbeGegner && fields[x + 2, y - 2, 2] == 0) return 0;   // schlagen möglich
                                 else if (fields[x - 1, y - 1, 2] == farbeGegner && fields[x - 2, y - 2, 2] == 0) return 0;   // schlagen möglich
@@ -755,9 +669,10 @@ namespace Dame
                             else return 1;  // schlagen nirgens möglich
                         }
                     }
+                    else return 1;
                 }
             }
-            return 1;   // kein schlagen möglich
+            return 1;
         }
 
 
@@ -892,3 +807,106 @@ namespace Dame
                 }
             }
             */
+
+
+
+
+/*
+
+old diagonaleDistanz
+
+
+/*if (feldX < 2)
+                    {
+                        if (fields[feldX + 1, feldY + 1, 2] == 1)
+                        {
+                            if (fields[feldX + 1, feldY + 1, 4] == 1)   // muss noch überall angepasst werden!!                        // wenn damestein übersprungen, muss Dame sein zum schlagen
+                            {
+                                if (fields[feldX, feldY, 4] == 1)
+                                {
+                                    schlagen(feldX + 1, feldY + 1, feldX, feldY);
+                                    return 0;
+                                }
+                                else return 1;
+                            }
+                            else
+                            {
+                                schlagen(feldX + 1, feldY + 1, feldX, feldY);
+                                return 0;
+                            }
+                        }
+                        else return 1;
+                    }
+                    else if (feldX > 5)     // rand rechts
+                    {
+                        if (fields[feldX - 1, feldY + 1, 2] == 1)
+                        {
+                            if (fields[feldX - 1, feldY + 1, 4] == 1)
+                            {
+                                if (fields[feldX, feldY, 4] == 1)
+                                {
+                                    schlagen(feldX - 1, feldY + 1, feldX, feldY);
+                                    return 0;
+                                }
+                                else return 1;
+                            }
+                            else
+                            {
+                                schlagen(feldX - 1, feldY + 1, feldX, feldY);
+                                return 0;
+                            }
+                        }
+                        else return 1;
+                    }
+                    else */
+
+
+
+
+
+
+
+
+/*if (feldX < 2)                                                          // wenn links am Rand
+                    {
+                        if (fields[feldX + 1, feldY - 1, 2] == 2)                               // übersprungenes Feld ein gegnerischer Stein?
+                        {
+                            if (fields[feldX + 1, feldY - 1, 4] == 1)   // muss noch überall angepasst werden!!                        // wenn damestein übersprungen, muss Dame sein zum schlagen
+                            {
+                                if (fields[feldX, feldY, 4] == 1)
+                                {
+                                    schlagen(feldX + 1, feldY - 1, feldX, feldY);
+                                    return 0;
+                                }
+                                else return 1;
+                            }
+                            else
+                            {
+                                schlagen(feldX + 1, feldY - 1, feldX, feldY);                                         // wenn ja, schlage diesen, gültig zurückgeben
+                                return 0;
+                            }
+                        }
+                        else return 1;                                                              // sonst ungültig zurückgeben
+                    }
+                    else if (feldX > 5)                                                     // wenn rechts am Rand
+                    {
+                        if (fields[feldX - 1, feldY - 1, 2] == 2)                               // übersprungenes Feld ein gegnerischer Stein?
+                        {
+                            if (fields[feldX - 1, feldY - 1, 4] == 1)
+                            {
+                                if (fields[feldX, feldY, 4] == 1)
+                                {
+                                    schlagen(feldX - 1, feldY - 1, feldX, feldY);
+                                    return 0;
+                                }
+                                else return 1;
+                            }
+                            else
+                            {
+                                schlagen(feldX - 1, feldY - 1, feldX, feldY);                                         // wenn ja, schlage diesen, gültig zurückgeben
+                                return 0;
+                            }
+                        }
+                        else return 1;                                                              // sonst ungültig zurückgeben
+                    }*/
+//else
