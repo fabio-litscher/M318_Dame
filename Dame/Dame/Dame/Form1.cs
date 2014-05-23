@@ -128,7 +128,7 @@ namespace Dame
                 lastColor = 0;
                 zeichneSteine();
             }
-            else if (firstRound != 1 && lastColor != 0 && schlagenMoeglich() == 0)
+            else if (schlagenMoeglich() == 0)
             {
                 Console.WriteLine("schlagen möglich!");
                 fields[lastFieldX, lastFieldY, 2] = lastColor;
@@ -600,79 +600,141 @@ namespace Dame
 
         public int schlagenMoeglich()   // überprüfung ob irgendwo geschlagen werden kann, nur diese Varianten sollen dann möglich sein
         {
+            int returnValue = -1;
             int farbeGegner = 0;
+            if (firstRound == 1) return 1;
+            if (lastColor == 0) return 1;
+            if (lastColor == 1) farbeGegner = 2;
+            else if (lastColor == 2) farbeGegner = 1;
 
             for (int x = 0; x < 8; x++)
             {
                 for (int y = 0; y < 8; y++)
                 {
-                    if (fields[x, y, 2] == 1) farbeGegner = 2;
-                    else if (fields[x, y, 2] == 2) farbeGegner = 1;
-
-                    if (fields[x, y, 2] != 0)
+                    if(fields[x, y, 4] == 1)        // Wenn Damestein
                     {
-                        if (x < 2)
+                        if (x < 2)                 // wenn am linken zu nahe Rand
                         {
-                            if (fields[x, y, 4] == 1)
+                            if (fields[x + 1, y + 1, 2] == farbeGegner && fields[x + 2, y + 2, 2] == 0)
                             {
-                                if (fields[x + 1, y + 1, 2] == farbeGegner && fields[x + 2, y + 2, 2] == 0) return 0;             // schlagen möglich
-                                else if (fields[x + 1, y - 1, 2] == farbeGegner && fields[x + 2, y - 2, 2] == 0) return 0;             // schlagen möglich
+                                if (lastPositionX == x && lastPositionY == y) return 1;         // zug ist i.O.
+                                else returnValue = 0;
                             }
-                            else if (spieler == 1 && fields[x, y, 2] == 1)
+                            else if (fields[x + 1, y - 1, 2] == farbeGegner && fields[x + 2, y - 2, 2] == 0)
                             {
-                                if (fields[x + 1, y + 1, 2] == farbeGegner && fields[x + 2, y + 2, 2] == 0) return 0;             // schlagen möglich
+                                if (lastPositionX == x && lastPositionY == y) return 1;         // zug ist i.O.
+                                else returnValue = 0;
                             }
-                            else if (spieler == 2 && fields[x, y, 2] == 2)
-                            {
-                                if (fields[x + 1, y - 1, 2] == farbeGegner && fields[x + 2, y - 2, 2] == 0) return 0;             // schlagen möglich
-                            }
-                            else return 1;                                                  // schlagen nirgens möglich
                         }
-
-                        else if (x > 5)
+                        else if (x > 5)                 // wenn am linken zu nahe Rand
                         {
-                            if (fields[x, y, 4] == 1)
+                            if (fields[x - 1, y + 1, 2] == farbeGegner && fields[x - 2, y + 2, 2] == 0)
                             {
-                                if (fields[x - 1, y + 1, 2] == farbeGegner && fields[x - 2, y + 2, 2] == 0) return 0;             // schlagen möglich
-                                else if (fields[x - 1, y - 1, 2] == farbeGegner && fields[x - 2, y - 2, 2] == 0) return 0;             // schlagen möglich
+                                if (lastPositionX == x && lastPositionY == y) return 1;         // zug ist i.O.
+                                else returnValue = 0;
                             }
-                            else if (spieler == 1 && fields[x, y, 2] == 1)
+                            else if (fields[x - 1, y - 1, 2] == farbeGegner && fields[x - 2, y - 2, 2] == 0)
                             {
-                                if (fields[x - 1, y + 1, 2] == farbeGegner && fields[x - 2, y + 2, 2] == 0) return 0;             // schlagen möglich
+                                if (lastPositionX == x && lastPositionY == y) return 1;         // zug ist i.O.
+                                else returnValue = 0;
                             }
-                            else if (spieler == 2 && fields[x, y, 2] == 2)
-                            {
-                                if (fields[x - 1, y - 1, 2] == farbeGegner && fields[x - 2, y - 2, 2] == 0) return 0;             // schlagen möglich
-                            }
-                            else return 1;
                         }
-
                         else
                         {
-                            if (fields[x, y, 4] == 1)
+                            if (fields[x + 1, y + 1, 2] == farbeGegner && fields[x + 2, y + 2, 2] == 0)
                             {
-                                if (fields[x + 1, y + 1, 2] == farbeGegner && fields[x + 2, y + 2, 2] == 0) return 0;   // schlagen möglich
-                                else if (fields[x - 1, y + 1, 2] == farbeGegner && fields[x - 2, y + 2, 2] == 0) return 0;   // schlagen möglich
-                                else if (fields[x + 1, y - 1, 2] == farbeGegner && fields[x + 2, y - 2, 2] == 0) return 0;   // schlagen möglich
-                                else if (fields[x - 1, y - 1, 2] == farbeGegner && fields[x - 2, y - 2, 2] == 0) return 0;   // schlagen möglich
+                                if (lastPositionX == x && lastPositionY == y) return 1;         // zug ist i.O.
+                                else returnValue = 0;
                             }
-                            else if (spieler == 1 && fields[x, y, 2] == 1)
+                            else if (fields[x - 1, y + 1, 2] == farbeGegner && fields[x - 2, y + 2, 2] == 0)
                             {
-                                if (fields[x + 1, y + 1, 2] == farbeGegner && fields[x + 2, y + 2, 2] == 0) return 0;   // schlagen möglich
-                                else if (fields[x - 1, y + 1, 2] == farbeGegner && fields[x - 2, y + 2, 2] == 0) return 0;   // schlagen möglich
+                                if (lastPositionX == x && lastPositionY == y) return 1;         // zug ist i.O.
+                                else returnValue = 0;
                             }
-                            else if (spieler == 2 && fields[x, y, 2] == 2)
+                            else if (fields[x + 1, y - 1, 2] == farbeGegner && fields[x + 2, y - 2, 2] == 0)
                             {
-                                if (fields[x + 1, y - 1, 2] == farbeGegner && fields[x + 2, y - 2, 2] == 0) return 0;   // schlagen möglich
-                                else if (fields[x - 1, y - 1, 2] == farbeGegner && fields[x - 2, y - 2, 2] == 0) return 0;   // schlagen möglich
+                                if (lastPositionX == x && lastPositionY == y) return 1;         // zug ist i.O.
+                                else returnValue = 0;
                             }
-                            else return 1;  // schlagen nirgens möglich
+                            else if (fields[x - 1, y - 1, 2] == farbeGegner && fields[x - 2, y - 2, 2] == 0)
+                            {
+                                if (lastPositionX == x && lastPositionY == y) return 1;         // zug ist i.O.
+                                else returnValue = 0;
+                            }
                         }
                     }
-                    else return 1;
+
+                    else if (fields[x, y, 2] == 1)       // Wenn weisser Stein
+                    {
+                        if (y > 5) return 1;            // spielfeldrand unten zu nahe
+                        else if (x < 2)                 // wenn am linken zu nahe Rand
+                        {
+                            if (fields[x + 1, y + 1, 2] == 2 && fields[x + 2, y + 2, 2] == 0)
+                            {
+                                if (lastPositionX == x && lastPositionY == y) return 1;         // zug ist i.O.
+                                else returnValue = 0;
+                            }
+                        }
+                        else if (x > 5)                 // wenn am linken zu nahe Rand
+                        {
+                            if (fields[x - 1, y + 1, 2] == 2 && fields[x - 2, y + 2, 2] == 0)
+                            {
+                                if (lastPositionX == x && lastPositionY == y) return 1;         // zug ist i.O.
+                                else returnValue = 0;
+                            }
+                        }
+                        else
+                        {
+                            if (fields[x + 1, y + 1, 2] == 2 && fields[x + 2, y + 2, 2] == 0)
+                            {
+                                if (lastPositionX == x && lastPositionY == y) return 1;         // zug ist i.O.
+                                else returnValue = 0;
+                            }
+                            else if (fields[x - 1, y + 1, 2] == 2 && fields[x - 2, y + 2, 2] == 0)
+                            {
+                                if (lastPositionX == x && lastPositionY == y) return 1;         // zug ist i.O.
+                                else returnValue = 0;
+                            }
+                        }
+                    }
+
+                    else if (fields[x, y, 2] == 2)       // Wenn roter Stein
+                    {
+                        if (y < 5) return 1;            // spielfeldrand oben zu nahe
+                        else if (x < 2)                 // wenn am linken zu nahe Rand
+                        {
+                            if (fields[x + 1, y - 1, 2] == 1 && fields[x + 2, y - 2, 2] == 0)
+                            {
+                                if (lastPositionX == x && lastPositionY == y) return 1;         // zug ist i.O.
+                                else returnValue = 0;
+                            }
+                        }
+                        else if (x > 5)                 // wenn am linken zu nahe Rand
+                        {
+                            if (fields[x - 1, y - 1, 2] == 1 && fields[x - 2, y - 2, 2] == 0)
+                            {
+                                if (lastPositionX == x && lastPositionY == y) return 1;         // zug ist i.O.
+                                else returnValue = 0;
+                            }
+                        }
+                        else
+                        {
+                            if (fields[x + 1, y - 1, 2] == 1 && fields[x + 2, y - 2, 2] == 0)
+                            {
+                                if (lastPositionX == x && lastPositionY == y) return 1;         // zug ist i.O.
+                                else returnValue = 0;
+                            }
+                            else if (fields[x - 1, y - 1, 2] == 1 && fields[x - 2, y - 2, 2] == 0)
+                            {
+                                if (lastPositionX == x && lastPositionY == y) return 1;         // zug ist i.O.
+                                else returnValue = 0;
+                            }
+                        }
+                    }
                 }
             }
-            return 1;
+            if (returnValue == 0) return 0;         // schlagen wäre möglich
+            else return 1;
         }
 
 
