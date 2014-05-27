@@ -13,6 +13,9 @@ namespace Dame
     public partial class Form1 : Form
     {
         int[, ,] fields = new int[8, 8, 5];     // 3 Dimensionales Array: X, Y, Spielstein (0=kein Stein, 1=weiss, 2=rot), zulässiges Feld (0=ja, 1=nein), Dame (0=nein, 1=ja)
+        List<int> possibleHits = new List<int>();
+        int hitCounter = 0;
+        
         int lastColor;
         int firstRound = 1;
         int lastFieldX = -1, lastFieldY = -1;
@@ -152,6 +155,13 @@ namespace Dame
                         if (firstRound == 1) firstRound = 0;
                         if (fields[lastPositionX, lastPositionY, 4] == 1) fields[feldX, feldY, 4] = 1;
                         fields[lastPositionX, lastPositionY, 4] = 0;
+                        if (checkHitFields(feldX, feldY) == 0)
+                        {
+                            Console.WriteLine("falsches Feld, schlagen möglich!");
+                            fields[lastFieldX, lastFieldY, 2] = lastColor;
+                            lastColor = 0;
+                            zeichneSteine();
+                        }
                         lastColor = 0;
                         lastFieldY = -1;
                         break;
@@ -600,12 +610,13 @@ namespace Dame
 
         public int schlagenMoeglich()   // überprüfung ob irgendwo geschlagen werden kann, nur diese Varianten sollen dann möglich sein
         {
-            int returnValue = -1;
             int farbeGegner = 0;
-            if (firstRound == 1) return 1;
+            //if (firstRound == 1) return 1;
             if (lastColor == 0) return 1;
             if (lastColor == 1) farbeGegner = 2;
             else if (lastColor == 2) farbeGegner = 1;
+            hitCounter = 0;
+            possibleHits.Clear();
 
             for (int x = 0; x < 8; x++)
             {
@@ -617,125 +628,154 @@ namespace Dame
                         {
                             if (fields[x + 1, y + 1, 2] == farbeGegner && fields[x + 2, y + 2, 2] == 0)
                             {
-                                if (lastPositionX == x && lastPositionY == y) return 1;         // zug ist i.O.
-                                else returnValue = 0;
+                                hitCounter++;
+                                possibleHits.Add(x + 2);
+                                possibleHits.Add(y + 2);
                             }
-                            else if (fields[x + 1, y - 1, 2] == farbeGegner && fields[x + 2, y - 2, 2] == 0)
+                            if (fields[x + 1, y - 1, 2] == farbeGegner && fields[x + 2, y - 2, 2] == 0)
                             {
-                                if (lastPositionX == x && lastPositionY == y) return 1;         // zug ist i.O.
-                                else returnValue = 0;
+                                hitCounter++;
+                                possibleHits.Add(x + 2);
+                                possibleHits.Add(y - 2);
                             }
                         }
                         else if (x > 5)                 // wenn am linken zu nahe Rand
                         {
                             if (fields[x - 1, y + 1, 2] == farbeGegner && fields[x - 2, y + 2, 2] == 0)
                             {
-                                if (lastPositionX == x && lastPositionY == y) return 1;         // zug ist i.O.
-                                else returnValue = 0;
+                                hitCounter++;
+                                possibleHits.Add(x - 2);
+                                possibleHits.Add(y + 2);
                             }
-                            else if (fields[x - 1, y - 1, 2] == farbeGegner && fields[x - 2, y - 2, 2] == 0)
+                            if (fields[x - 1, y - 1, 2] == farbeGegner && fields[x - 2, y - 2, 2] == 0)
                             {
-                                if (lastPositionX == x && lastPositionY == y) return 1;         // zug ist i.O.
-                                else returnValue = 0;
+                                hitCounter++;
+                                possibleHits.Add(x - 2);
+                                possibleHits.Add(y - 2);
                             }
                         }
                         else
                         {
                             if (fields[x + 1, y + 1, 2] == farbeGegner && fields[x + 2, y + 2, 2] == 0)
                             {
-                                if (lastPositionX == x && lastPositionY == y) return 1;         // zug ist i.O.
-                                else returnValue = 0;
+                                hitCounter++;
+                                possibleHits.Add(x + 2);
+                                possibleHits.Add(y + 2);
                             }
-                            else if (fields[x - 1, y + 1, 2] == farbeGegner && fields[x - 2, y + 2, 2] == 0)
+                            if (fields[x - 1, y + 1, 2] == farbeGegner && fields[x - 2, y + 2, 2] == 0)
                             {
-                                if (lastPositionX == x && lastPositionY == y) return 1;         // zug ist i.O.
-                                else returnValue = 0;
+                                hitCounter++;
+                                possibleHits.Add(x - 2);
+                                possibleHits.Add(y + 2);
                             }
-                            else if (fields[x + 1, y - 1, 2] == farbeGegner && fields[x + 2, y - 2, 2] == 0)
+                            if (fields[x + 1, y - 1, 2] == farbeGegner && fields[x + 2, y - 2, 2] == 0)
                             {
-                                if (lastPositionX == x && lastPositionY == y) return 1;         // zug ist i.O.
-                                else returnValue = 0;
+                                hitCounter++;
+                                possibleHits.Add(x + 2);
+                                possibleHits.Add(y - 2);
                             }
-                            else if (fields[x - 1, y - 1, 2] == farbeGegner && fields[x - 2, y - 2, 2] == 0)
+                            if (fields[x - 1, y - 1, 2] == farbeGegner && fields[x - 2, y - 2, 2] == 0)
                             {
-                                if (lastPositionX == x && lastPositionY == y) return 1;         // zug ist i.O.
-                                else returnValue = 0;
+                                hitCounter++;
+                                possibleHits.Add(x - 2);
+                                possibleHits.Add(y - 2);
                             }
                         }
                     }
 
                     else if (fields[x, y, 2] == 1)       // Wenn weisser Stein
                     {
-                        if (y > 5) return 1;            // spielfeldrand unten zu nahe
+                        if (y > 5) continue;            // spielfeldrand unten zu nahe
                         else if (x < 2)                 // wenn am linken zu nahe Rand
                         {
                             if (fields[x + 1, y + 1, 2] == 2 && fields[x + 2, y + 2, 2] == 0)
                             {
-                                if (lastPositionX == x && lastPositionY == y) return 1;         // zug ist i.O.
-                                else returnValue = 0;
+                                hitCounter++;
+                                possibleHits.Add(x + 2);
+                                possibleHits.Add(y + 2);
                             }
                         }
                         else if (x > 5)                 // wenn am linken zu nahe Rand
                         {
                             if (fields[x - 1, y + 1, 2] == 2 && fields[x - 2, y + 2, 2] == 0)
                             {
-                                if (lastPositionX == x && lastPositionY == y) return 1;         // zug ist i.O.
-                                else returnValue = 0;
+                                hitCounter++;
+                                possibleHits.Add(x - 2);
+                                possibleHits.Add(y + 2);
                             }
                         }
                         else
                         {
                             if (fields[x + 1, y + 1, 2] == 2 && fields[x + 2, y + 2, 2] == 0)
                             {
-                                if (lastPositionX == x && lastPositionY == y) return 1;         // zug ist i.O.
-                                else returnValue = 0;
+                                hitCounter++;
+                                possibleHits.Add(x + 2);
+                                possibleHits.Add(y + 2);
                             }
-                            else if (fields[x - 1, y + 1, 2] == 2 && fields[x - 2, y + 2, 2] == 0)
+                            if (fields[x - 1, y + 1, 2] == 2 && fields[x - 2, y + 2, 2] == 0)
                             {
-                                if (lastPositionX == x && lastPositionY == y) return 1;         // zug ist i.O.
-                                else returnValue = 0;
+                                hitCounter++;
+                                possibleHits.Add(x - 2);
+                                possibleHits.Add(y + 2);
                             }
                         }
                     }
 
                     else if (fields[x, y, 2] == 2)       // Wenn roter Stein
                     {
-                        if (y < 5) return 1;            // spielfeldrand oben zu nahe
+                        if (y < 5) continue;            // spielfeldrand oben zu nahe
                         else if (x < 2)                 // wenn am linken zu nahe Rand
                         {
                             if (fields[x + 1, y - 1, 2] == 1 && fields[x + 2, y - 2, 2] == 0)
                             {
-                                if (lastPositionX == x && lastPositionY == y) return 1;         // zug ist i.O.
-                                else returnValue = 0;
+                                hitCounter++;
+                                possibleHits.Add(x + 2);
+                                possibleHits.Add(y - 2);
                             }
                         }
                         else if (x > 5)                 // wenn am linken zu nahe Rand
                         {
                             if (fields[x - 1, y - 1, 2] == 1 && fields[x - 2, y - 2, 2] == 0)
                             {
-                                if (lastPositionX == x && lastPositionY == y) return 1;         // zug ist i.O.
-                                else returnValue = 0;
+                                hitCounter++;
+                                possibleHits.Add(x - 2);
+                                possibleHits.Add(y - 2);
                             }
                         }
                         else
                         {
                             if (fields[x + 1, y - 1, 2] == 1 && fields[x + 2, y - 2, 2] == 0)
                             {
-                                if (lastPositionX == x && lastPositionY == y) return 1;         // zug ist i.O.
-                                else returnValue = 0;
+                                hitCounter++;
+                                possibleHits.Add(x + 2);
+                                possibleHits.Add(y - 2);
                             }
-                            else if (fields[x - 1, y - 1, 2] == 1 && fields[x - 2, y - 2, 2] == 0)
+                            if (fields[x - 1, y - 1, 2] == 1 && fields[x - 2, y - 2, 2] == 0)
                             {
-                                if (lastPositionX == x && lastPositionY == y) return 1;         // zug ist i.O.
-                                else returnValue = 0;
+                                hitCounter++;
+                                possibleHits.Add(x - 2);
+                                possibleHits.Add(y - 2);
                             }
                         }
                     }
                 }
             }
-            if (returnValue == 0) return 0;         // schlagen wäre möglich
-            else return 1;
+            Console.WriteLine("counter " + hitCounter);
+            if (hitCounter == 0) return 1;                  // nirgens schlagen möglich, darf mit beliebigem Stein fahren.
+            else return 0;                                  // kann irgendwo schlagen
         }
+
+        public int checkHitFields(int feldX, int feldY)
+        {
+            if (hitCounter == 0) return 1;
+
+            for (int i = 0; i <= possibleHits.Count; i = i + 2)
+            {
+                if (feldX == possibleHits[i] && feldY == possibleHits[i + 1]) return 1;
+            }
+            return 0;
+        }
+
 
 
 
@@ -972,3 +1012,146 @@ old diagonaleDistanz
                         else return 1;                                                              // sonst ungültig zurückgeben
                     }*/
 //else
+
+
+
+/*
+public int schlagenMoeglich()   // überprüfung ob irgendwo geschlagen werden kann, nur diese Varianten sollen dann möglich sein
+        {
+            int returnValue = -1;
+            int farbeGegner = 0;
+            if (firstRound == 1) return 1;
+            if (lastColor == 0) return 1;
+            if (lastColor == 1) farbeGegner = 2;
+            else if (lastColor == 2) farbeGegner = 1;
+
+            for (int x = 0; x < 8; x++)
+            {
+                for (int y = 0; y < 8; y++)
+                {
+                    if(fields[x, y, 4] == 1)        // Wenn Damestein
+                    {
+                        if (x < 2)                 // wenn am linken zu nahe Rand
+                        {
+                            if (fields[x + 1, y + 1, 2] == farbeGegner && fields[x + 2, y + 2, 2] == 0)
+                            {
+                                if (lastPositionX == x && lastPositionY == y) return 1;         // zug ist i.O.
+                                else returnValue = 0;
+                            }
+                            else if (fields[x + 1, y - 1, 2] == farbeGegner && fields[x + 2, y - 2, 2] == 0)
+                            {
+                                if (lastPositionX == x && lastPositionY == y) return 1;         // zug ist i.O.
+                                else returnValue = 0;
+                            }
+                        }
+                        else if (x > 5)                 // wenn am linken zu nahe Rand
+                        {
+                            if (fields[x - 1, y + 1, 2] == farbeGegner && fields[x - 2, y + 2, 2] == 0)
+                            {
+                                if (lastPositionX == x && lastPositionY == y) return 1;         // zug ist i.O.
+                                else returnValue = 0;
+                            }
+                            else if (fields[x - 1, y - 1, 2] == farbeGegner && fields[x - 2, y - 2, 2] == 0)
+                            {
+                                if (lastPositionX == x && lastPositionY == y) return 1;         // zug ist i.O.
+                                else returnValue = 0;
+                            }
+                        }
+                        else
+                        {
+                            if (fields[x + 1, y + 1, 2] == farbeGegner && fields[x + 2, y + 2, 2] == 0)
+                            {
+                                if (lastPositionX == x && lastPositionY == y) return 1;         // zug ist i.O.
+                                else returnValue = 0;
+                            }
+                            else if (fields[x - 1, y + 1, 2] == farbeGegner && fields[x - 2, y + 2, 2] == 0)
+                            {
+                                if (lastPositionX == x && lastPositionY == y) return 1;         // zug ist i.O.
+                                else returnValue = 0;
+                            }
+                            else if (fields[x + 1, y - 1, 2] == farbeGegner && fields[x + 2, y - 2, 2] == 0)
+                            {
+                                if (lastPositionX == x && lastPositionY == y) return 1;         // zug ist i.O.
+                                else returnValue = 0;
+                            }
+                            else if (fields[x - 1, y - 1, 2] == farbeGegner && fields[x - 2, y - 2, 2] == 0)
+                            {
+                                if (lastPositionX == x && lastPositionY == y) return 1;         // zug ist i.O.
+                                else returnValue = 0;
+                            }
+                        }
+                    }
+
+                    else if (fields[x, y, 2] == 1)       // Wenn weisser Stein
+                    {
+                        if (y > 5) return 1;            // spielfeldrand unten zu nahe
+                        else if (x < 2)                 // wenn am linken zu nahe Rand
+                        {
+                            if (fields[x + 1, y + 1, 2] == 2 && fields[x + 2, y + 2, 2] == 0)
+                            {
+                                if (lastPositionX == x && lastPositionY == y) return 1;         // zug ist i.O.
+                                else returnValue = 0;
+                            }
+                        }
+                        else if (x > 5)                 // wenn am linken zu nahe Rand
+                        {
+                            if (fields[x - 1, y + 1, 2] == 2 && fields[x - 2, y + 2, 2] == 0)
+                            {
+                                if (lastPositionX == x && lastPositionY == y) return 1;         // zug ist i.O.
+                                else returnValue = 0;
+                            }
+                        }
+                        else
+                        {
+                            if (fields[x + 1, y + 1, 2] == 2 && fields[x + 2, y + 2, 2] == 0)
+                            {
+                                if (lastPositionX == x && lastPositionY == y) return 1;         // zug ist i.O.
+                                else returnValue = 0;
+                            }
+                            else if (fields[x - 1, y + 1, 2] == 2 && fields[x - 2, y + 2, 2] == 0)
+                            {
+                                if (lastPositionX == x && lastPositionY == y) return 1;         // zug ist i.O.
+                                else returnValue = 0;
+                            }
+                        }
+                    }
+
+                    else if (fields[x, y, 2] == 2)       // Wenn roter Stein
+                    {
+                        if (y < 5) return 1;            // spielfeldrand oben zu nahe
+                        else if (x < 2)                 // wenn am linken zu nahe Rand
+                        {
+                            if (fields[x + 1, y - 1, 2] == 1 && fields[x + 2, y - 2, 2] == 0)
+                            {
+                                if (lastPositionX == x && lastPositionY == y) return 1;         // zug ist i.O.
+                                else returnValue = 0;
+                            }
+                        }
+                        else if (x > 5)                 // wenn am linken zu nahe Rand
+                        {
+                            if (fields[x - 1, y - 1, 2] == 1 && fields[x - 2, y - 2, 2] == 0)
+                            {
+                                if (lastPositionX == x && lastPositionY == y) return 1;         // zug ist i.O.
+                                else returnValue = 0;
+                            }
+                        }
+                        else
+                        {
+                            if (fields[x + 1, y - 1, 2] == 1 && fields[x + 2, y - 2, 2] == 0)
+                            {
+                                if (lastPositionX == x && lastPositionY == y) return 1;         // zug ist i.O.
+                                else returnValue = 0;
+                            }
+                            else if (fields[x - 1, y - 1, 2] == 1 && fields[x - 2, y - 2, 2] == 0)
+                            {
+                                if (lastPositionX == x && lastPositionY == y) return 1;         // zug ist i.O.
+                                else returnValue = 0;
+                            }
+                        }
+                    }
+                }
+            }
+            if (returnValue == 0) return 0;         // schlagen wäre möglich
+            else return 1;
+        }
+*/
