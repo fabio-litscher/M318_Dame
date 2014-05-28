@@ -131,13 +131,18 @@ namespace Dame
                 lastColor = 0;
                 zeichneSteine();
             }
-            else if (schlagenMoeglich() == 0)
+
+            else if (schlagenMoeglich(feldX, feldY) == 0)
             {
-                Console.WriteLine("schlagen möglich!");
-                fields[lastFieldX, lastFieldY, 2] = lastColor;
-                lastColor = 0;
-                zeichneSteine();
+                if (checkHitFields(feldX, feldY) == 0)
+                {
+                    Console.WriteLine("falsches Feld, schlagen möglich!");
+                    fields[lastFieldX, lastFieldY, 2] = lastColor;
+                    lastColor = 0;
+                    zeichneSteine();
+                }
             }
+
             else
             {
                 if (weiterSchlagenMoeglich(feldX, feldY) == 1)    // wenn kein weiteres schlagen mehr möglich
@@ -155,13 +160,6 @@ namespace Dame
                         if (firstRound == 1) firstRound = 0;
                         if (fields[lastPositionX, lastPositionY, 4] == 1) fields[feldX, feldY, 4] = 1;
                         fields[lastPositionX, lastPositionY, 4] = 0;
-                        if (checkHitFields(feldX, feldY) == 0)
-                        {
-                            Console.WriteLine("falsches Feld, schlagen möglich!");
-                            fields[lastFieldX, lastFieldY, 2] = lastColor;
-                            lastColor = 0;
-                            zeichneSteine();
-                        }
                         lastColor = 0;
                         lastFieldY = -1;
                         break;
@@ -608,7 +606,7 @@ namespace Dame
             else return 1;   // weiteres schlagen nicht möglich
         }
 
-        public int schlagenMoeglich()   // überprüfung ob irgendwo geschlagen werden kann, nur diese Varianten sollen dann möglich sein
+        public int schlagenMoeglich(int feldX, int feldY)   // überprüfung ob irgendwo geschlagen werden kann, nur diese Varianten sollen dann möglich sein
         {
             int farbeGegner = 0;
             //if (firstRound == 1) return 1;
@@ -622,9 +620,81 @@ namespace Dame
             {
                 for (int y = 0; y < 8; y++)
                 {
-                    if(fields[x, y, 4] == 1)        // Wenn Damestein
+                    if(fields[x, y, 4] == 1 || (lastPositionX == x && lastPositionY == y && fields[feldX, feldY, 4] == 1))        // Wenn Damestein
                     {
                         if (x < 2)                 // wenn am linken zu nahe Rand
+                        {
+                            if(y < 2)
+                            {
+                                if (fields[x + 1, y + 1, 2] == farbeGegner && fields[x + 2, y + 2, 2] == 0)
+                                {
+                                    hitCounter++;
+                                    possibleHits.Add(x + 2);
+                                    possibleHits.Add(y + 2);
+                                }
+                            }
+                            else if (y > 5)
+                            {
+                                if (fields[x + 1, y - 1, 2] == farbeGegner && fields[x + 2, y - 2, 2] == 0)
+                                {
+                                    hitCounter++;
+                                    possibleHits.Add(x + 2);
+                                    possibleHits.Add(y - 2);
+                                }
+                            }
+                            else
+                            {
+                                if (fields[x + 1, y + 1, 2] == farbeGegner && fields[x + 2, y + 2, 2] == 0)
+                                {
+                                    hitCounter++;
+                                    possibleHits.Add(x + 2);
+                                    possibleHits.Add(y + 2);
+                                }
+                                if (fields[x + 1, y - 1, 2] == farbeGegner && fields[x + 2, y - 2, 2] == 0)
+                                {
+                                    hitCounter++;
+                                    possibleHits.Add(x + 2);
+                                    possibleHits.Add(y - 2);
+                                }
+                            }
+                        }
+                        else if (x > 5)                 // wenn am linken zu nahe Rand
+                        {
+                            if (y < 2)
+                            {
+                                if (fields[x - 1, y + 1, 2] == farbeGegner && fields[x - 2, y + 2, 2] == 0)
+                                {
+                                    hitCounter++;
+                                    possibleHits.Add(x - 2);
+                                    possibleHits.Add(y + 2);
+                                }
+                            }
+                            else if (y > 5)
+                            {
+                                if (fields[x - 1, y - 1, 2] == farbeGegner && fields[x - 2, y - 2, 2] == 0)
+                                {
+                                    hitCounter++;
+                                    possibleHits.Add(x - 2);
+                                    possibleHits.Add(y - 2);
+                                }
+                            }
+                            else
+                            {
+                                if (fields[x - 1, y + 1, 2] == farbeGegner && fields[x - 2, y + 2, 2] == 0)
+                                {
+                                    hitCounter++;
+                                    possibleHits.Add(x - 2);
+                                    possibleHits.Add(y + 2);
+                                }
+                                if (fields[x - 1, y - 1, 2] == farbeGegner && fields[x - 2, y - 2, 2] == 0)
+                                {
+                                    hitCounter++;
+                                    possibleHits.Add(x - 2);
+                                    possibleHits.Add(y - 2);
+                                }
+                            }
+                        }
+                        else if (y < 2)
                         {
                             if (fields[x + 1, y + 1, 2] == farbeGegner && fields[x + 2, y + 2, 2] == 0)
                             {
@@ -632,20 +702,20 @@ namespace Dame
                                 possibleHits.Add(x + 2);
                                 possibleHits.Add(y + 2);
                             }
-                            if (fields[x + 1, y - 1, 2] == farbeGegner && fields[x + 2, y - 2, 2] == 0)
-                            {
-                                hitCounter++;
-                                possibleHits.Add(x + 2);
-                                possibleHits.Add(y - 2);
-                            }
-                        }
-                        else if (x > 5)                 // wenn am linken zu nahe Rand
-                        {
                             if (fields[x - 1, y + 1, 2] == farbeGegner && fields[x - 2, y + 2, 2] == 0)
                             {
                                 hitCounter++;
                                 possibleHits.Add(x - 2);
                                 possibleHits.Add(y + 2);
+                            }
+                        }
+                        else if (y > 5)
+                        {
+                            if (fields[x + 1, y - 1, 2] == farbeGegner && fields[x + 2, y - 2, 2] == 0)
+                            {
+                                hitCounter++;
+                                possibleHits.Add(x + 2);
+                                possibleHits.Add(y - 2);
                             }
                             if (fields[x - 1, y - 1, 2] == farbeGegner && fields[x - 2, y - 2, 2] == 0)
                             {
@@ -683,7 +753,7 @@ namespace Dame
                         }
                     }
 
-                    else if (fields[x, y, 2] == 1)       // Wenn weisser Stein
+                    else if (fields[x, y, 2] == 1 || (lastPositionX == x && lastPositionY == y && lastColor == 1))       // Wenn weisser Stein
                     {
                         if (y > 5) continue;            // spielfeldrand unten zu nahe
                         else if (x < 2)                 // wenn am linken zu nahe Rand
@@ -721,7 +791,7 @@ namespace Dame
                         }
                     }
 
-                    else if (fields[x, y, 2] == 2)       // Wenn roter Stein
+                    else if (fields[x, y, 2] == 2 || (lastPositionX == x && lastPositionY == y && lastColor == 2))       // Wenn roter Stein
                     {
                         if (y < 5) continue;            // spielfeldrand oben zu nahe
                         else if (x < 2)                 // wenn am linken zu nahe Rand
@@ -767,11 +837,13 @@ namespace Dame
 
         public int checkHitFields(int feldX, int feldY)
         {
+            int k = 0;
             if (hitCounter == 0) return 1;
 
-            for (int i = 0; i <= possibleHits.Count; i = i + 2)
+            for (int i = 0; i < possibleHits.Count; i = i + 2)
             {
-                if (feldX == possibleHits[i] && feldY == possibleHits[i + 1]) return 1;
+                k = i + 1;
+                if (feldX == possibleHits[i] && feldY == possibleHits[k]) return 1;
             }
             return 0;
         }
