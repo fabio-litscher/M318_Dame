@@ -15,9 +15,7 @@ namespace Dame
         int[, ,] fields = new int[8, 8, 5];     // 3 Dimensionales Array: X, Y, Spielstein (0=kein Stein, 1=weiss, 2=rot), zulässiges Feld (0=ja, 1=nein), Dame (0=nein, 1=ja)
         List<int> possibleHits = new List<int>();
         int hitCounter = 0;
-
-        int winner = 0;
-        int schlagzwang = 0;
+        
         int lastColor;
         int firstRound = 1;
         int lastFieldX = -1, lastFieldY = -1;
@@ -46,7 +44,6 @@ namespace Dame
                 else z = 0;
                 for (int k = 0; k < 8; k++)
                 {
-                    fields[i, k, 4] = 0;
                     fields[i, k, 3] = z; // 1 = nicht zulässig
                     if (z == 1) // gesperrt
                     {
@@ -82,7 +79,13 @@ namespace Dame
         private void btn_newRound_Click(object sender, EventArgs e)
         {
             // neues spiel starten
-            newRound();
+
+            // Abfrage ob wirklich neu gestartet werden soll
+
+            spieler = 1;
+            setFixFields();
+            zeichneSteine();
+            zeichneSpieler();
         }
 
         private void pic_Spielfeld_MouseClick(object sender, MouseEventArgs e) // Nur für Maus
@@ -92,20 +95,19 @@ namespace Dame
             int feldY = fieldY(e.Y, eineEinheit);
 
             txt_console.Text = "";
-            if (rdb_schlagzwangEin.Checked) schlagzwang = 1;
-            else if (rdb_schlagzwangAus.Checked) schlagzwang = 0;
 
             if(fields[feldX, feldY, 2] != spieler && lastColor != spieler)
             {
                 txt_console.Text = "Spieler " + spieler + " ist am Zug!";
+                // Console.WriteLine("Anderer Spieler am Zug!");
             }
             else if (schongeschlagen == 1 && (feldX != schlagFeldX || feldY != schlagFeldY))      // es muss bei zweitem schlagen mit jenem Stein fahren, der geschlagen hat
             {
-                txt_console.Text = "Spieler " + spieler + ":\r\nEs muss mit dem Stein gefahren werden, der schlagen kann";             
+                txt_console.Text = "Spieler " + spieler + ": Es muss mit dem Stein gefahren werden, der schlagen kann";             
             }
             else if (feldGesperrt(feldX, feldY) == 0)
             {
-                txt_console.Text = "Spieler " + spieler + ":\r\nAuf weisse Felder darf nicht gesetzt werden!"; 
+                txt_console.Text = "Spieler " + spieler + ": Auf dieses Feld darf nicht gesetzt werden!"; 
                 fields[lastFieldX, lastFieldY, 2] = lastColor;
                 lastColor = 0;
                 zeichneSteine();
@@ -113,7 +115,6 @@ namespace Dame
 
             else if (gueltigeFahrt(feldX, feldY) == 1)
             {
-                txt_console.Text = "Spieler " + spieler + ":\r\nNur diagonal fahren ist erlaubt!";
                 fields[lastFieldX, lastFieldY, 2] = lastColor;
                 lastColor = 0;
                 zeichneSteine();
@@ -121,7 +122,7 @@ namespace Dame
 
             else if (feldBesetzt(feldX, feldY) == 0)
             {
-                txt_console.Text = "Spieler " + spieler + ":\r\nAuf ein bereits besetztes Feld kann nicht gesetzt werden!";
+                Console.WriteLine("Feld besetzt");
                 fields[lastFieldX, lastFieldY, 2] = lastColor;
                 lastColor = 0;
                 zeichneSteine();
@@ -129,31 +130,29 @@ namespace Dame
 
             else if (fahrtrichtung(feldX, feldY) == 1)
             {
-                txt_console.Text = "Spieler " + spieler + ":\r\nMit einem normalen Stein können Sie nicht rückwärts fahren!";
+                Console.WriteLine("Rückwärts!");
                 fields[lastFieldX, lastFieldY, 2] = lastColor;
                 lastColor = 0;
                 zeichneSteine();
             }
             else if (diagonaleDistanzDame(feldX, feldY) == 1)
             {
-                txt_console.Text = "Spieler " + spieler + ":\r\nSie dürfen nur beim Schlagen weiter als ein Feld springen!";
                 fields[lastFieldX, lastFieldY, 2] = lastColor;
                 lastColor = 0;
                 zeichneSteine();
             }
             else if (diagonaleDistanzNormal(feldX, feldY) == 1)
             {
-                txt_console.Text = "Spieler " + spieler + ":\r\nSie dürfen nur beim Schlagen weiter als ein Feld springen!";
                 fields[lastFieldX, lastFieldY, 2] = lastColor;
                 lastColor = 0;
                 zeichneSteine();
             }
 
-            else if (schlagzwang == 1 && schlagenMoeglich(feldX, feldY) == 0)
+            else if (schlagenMoeglich(feldX, feldY) == 0)
             {
                 if (checkHitFields(feldX, feldY) == 0)
                 {
-                    txt_console.Text = "Spieler " + spieler + ":\r\nEs muss mit dem Stein gefahren werden, der schlagen kann!";
+                    txt_console.Text = "Spieler " + spieler + ": Es muss mit dem Stein gefahren werden, der schlagen kann!";
                     fields[lastFieldX, lastFieldY, 2] = lastColor;
                     lastColor = 0;
                     zeichneSteine();
@@ -213,48 +212,29 @@ namespace Dame
             }
 
             zeichneSteine();
-
-            // falls das Spiel fertig ist, soll eine Messagebox kommen
-            winner = spielende();
-            if (winner == 1 && lastColor == 0)
-            {
-                MessageBox.Show("Spieler 1 hat gewonnen!", "Spielende", MessageBoxButtons.OK);               // weiss (Spieler 1) hat gewonnen
-                newRound();
-            }
-            else if (winner == 2 && lastColor == 0)
-            {
-                MessageBox.Show("Spieler 2 hat gewonnen!", "Spielende", MessageBoxButtons.OK);              // rot (Spieler 2) hat gewonnen
-                newRound();
-            }
-
+            
         }
 
-        public int spielende()
+        public void zeichneSpieler()
         {
-            int redCounter = 0;
-            int whiteCounter = 0;
+            pnl_whichPlayer.Refresh();
 
-            for (int i = 0; i < 8; i++)
+            if (spieler == 1)
             {
-                for (int k = 0; k < 8; k++)
-                {
-                    if (fields[i, k, 2] == 1) whiteCounter++;
-                    else if (fields[i, k, 2] == 2) redCounter++;
-                }
+                System.Drawing.SolidBrush myBrush = new System.Drawing.SolidBrush(System.Drawing.Color.Green);
+                System.Drawing.Graphics formGraphics = pnl_whichPlayer.CreateGraphics();
+                formGraphics.FillEllipse(myBrush, new Rectangle(17, 38, 15, 15));
+                myBrush.Dispose();
+                formGraphics.Dispose();
             }
-
-            if (whiteCounter == 0) return 2;
-            else if (redCounter == 0) return 1;
-            else return 0;
-        }
-
-        public void newRound()
-        {
-            spieler = 1;
-            setFixFields();
-            zeichneSteine();
-            zeichneSpieler();
-            rdb_schlagzwangAus.Checked = true;
+            else if (spieler == 2)
+            {
+                System.Drawing.SolidBrush myBrush = new System.Drawing.SolidBrush(System.Drawing.Color.Green);
+                System.Drawing.Graphics formGraphics = pnl_whichPlayer.CreateGraphics();
+                formGraphics.FillEllipse(myBrush, new Rectangle(17, 67, 15, 15));
+                myBrush.Dispose();
+                formGraphics.Dispose();
+            }
         }
 
         public int fieldX(int wertX, int eineEinheit)
@@ -330,28 +310,6 @@ namespace Dame
             fields[x, y, 0] = wertX;    // x Koordinate
             fields[x, y, 1] = wertY;    // y Koordinate
             fields[x, y, 4] = 0;        // Dame = nein
-        }
-
-        public void zeichneSpieler()
-        {
-            pnl_whichPlayer.Refresh();
-
-            if (spieler == 1)
-            {
-                System.Drawing.SolidBrush myBrush = new System.Drawing.SolidBrush(System.Drawing.Color.Green);
-                System.Drawing.Graphics formGraphics = pnl_whichPlayer.CreateGraphics();
-                formGraphics.FillEllipse(myBrush, new Rectangle(17, 38, 15, 15));
-                myBrush.Dispose();
-                formGraphics.Dispose();
-            }
-            else if (spieler == 2)
-            {
-                System.Drawing.SolidBrush myBrush = new System.Drawing.SolidBrush(System.Drawing.Color.Green);
-                System.Drawing.Graphics formGraphics = pnl_whichPlayer.CreateGraphics();
-                formGraphics.FillEllipse(myBrush, new Rectangle(17, 67, 15, 15));
-                myBrush.Dispose();
-                formGraphics.Dispose();
-            }
         }
 
         public void zeichneSteine()
@@ -969,7 +927,7 @@ namespace Dame
                             schlagen(feldX + 1, feldY - 1, feldX, feldY);                                         // wenn ja, schlage diesen, gültig zurückgeben
                             return 0;
                         }
-                        else return 1;                                                                     // sonst ungültig zurückgeben
+                        else return 1;        // evtl müssen diese weg??                                                      // sonst ungültig zurückgeben
                     }
                     else if (feldX > 5)                                                     // wenn rechts am Rand
                     {
@@ -1051,12 +1009,6 @@ namespace Dame
 }
 
 
-
-        ///////////////////
-        ///  Some Code  ///
-        ///////////////////
-
-
 /*      //Ausgabe ganzes array
             for (int i =0; i<8; i++)
             {
@@ -1066,4 +1018,250 @@ namespace Dame
                     Console.WriteLine(fields[i, k, 1]);
                 }
             }
+            */
+
+
+
+
+/*
+
+old diagonaleDistanz
+
+
+/*if (feldX < 2)
+                    {
+                        if (fields[feldX + 1, feldY + 1, 2] == 1)
+                        {
+                            if (fields[feldX + 1, feldY + 1, 4] == 1)   // muss noch überall angepasst werden!!                        // wenn damestein übersprungen, muss Dame sein zum schlagen
+                            {
+                                if (fields[feldX, feldY, 4] == 1)
+                                {
+                                    schlagen(feldX + 1, feldY + 1, feldX, feldY);
+                                    return 0;
+                                }
+                                else return 1;
+                            }
+                            else
+                            {
+                                schlagen(feldX + 1, feldY + 1, feldX, feldY);
+                                return 0;
+                            }
+                        }
+                        else return 1;
+                    }
+                    else if (feldX > 5)     // rand rechts
+                    {
+                        if (fields[feldX - 1, feldY + 1, 2] == 1)
+                        {
+                            if (fields[feldX - 1, feldY + 1, 4] == 1)
+                            {
+                                if (fields[feldX, feldY, 4] == 1)
+                                {
+                                    schlagen(feldX - 1, feldY + 1, feldX, feldY);
+                                    return 0;
+                                }
+                                else return 1;
+                            }
+                            else
+                            {
+                                schlagen(feldX - 1, feldY + 1, feldX, feldY);
+                                return 0;
+                            }
+                        }
+                        else return 1;
+                    }
+                    else */
+
+
+
+
+
+
+
+
+/*if (feldX < 2)                                                          // wenn links am Rand
+                    {
+                        if (fields[feldX + 1, feldY - 1, 2] == 2)                               // übersprungenes Feld ein gegnerischer Stein?
+                        {
+                            if (fields[feldX + 1, feldY - 1, 4] == 1)   // muss noch überall angepasst werden!!                        // wenn damestein übersprungen, muss Dame sein zum schlagen
+                            {
+                                if (fields[feldX, feldY, 4] == 1)
+                                {
+                                    schlagen(feldX + 1, feldY - 1, feldX, feldY);
+                                    return 0;
+                                }
+                                else return 1;
+                            }
+                            else
+                            {
+                                schlagen(feldX + 1, feldY - 1, feldX, feldY);                                         // wenn ja, schlage diesen, gültig zurückgeben
+                                return 0;
+                            }
+                        }
+                        else return 1;                                                              // sonst ungültig zurückgeben
+                    }
+                    else if (feldX > 5)                                                     // wenn rechts am Rand
+                    {
+                        if (fields[feldX - 1, feldY - 1, 2] == 2)                               // übersprungenes Feld ein gegnerischer Stein?
+                        {
+                            if (fields[feldX - 1, feldY - 1, 4] == 1)
+                            {
+                                if (fields[feldX, feldY, 4] == 1)
+                                {
+                                    schlagen(feldX - 1, feldY - 1, feldX, feldY);
+                                    return 0;
+                                }
+                                else return 1;
+                            }
+                            else
+                            {
+                                schlagen(feldX - 1, feldY - 1, feldX, feldY);                                         // wenn ja, schlage diesen, gültig zurückgeben
+                                return 0;
+                            }
+                        }
+                        else return 1;                                                              // sonst ungültig zurückgeben
+                    }*/
+//else
+
+
+
+/*
+public int schlagenMoeglich()   // überprüfung ob irgendwo geschlagen werden kann, nur diese Varianten sollen dann möglich sein
+        {
+            int returnValue = -1;
+            int farbeGegner = 0;
+            if (firstRound == 1) return 1;
+            if (lastColor == 0) return 1;
+            if (lastColor == 1) farbeGegner = 2;
+            else if (lastColor == 2) farbeGegner = 1;
+
+            for (int x = 0; x < 8; x++)
+            {
+                for (int y = 0; y < 8; y++)
+                {
+                    if(fields[x, y, 4] == 1)        // Wenn Damestein
+                    {
+                        if (x < 2)                 // wenn am linken zu nahe Rand
+                        {
+                            if (fields[x + 1, y + 1, 2] == farbeGegner && fields[x + 2, y + 2, 2] == 0)
+                            {
+                                if (lastPositionX == x && lastPositionY == y) return 1;         // zug ist i.O.
+                                else returnValue = 0;
+                            }
+                            else if (fields[x + 1, y - 1, 2] == farbeGegner && fields[x + 2, y - 2, 2] == 0)
+                            {
+                                if (lastPositionX == x && lastPositionY == y) return 1;         // zug ist i.O.
+                                else returnValue = 0;
+                            }
+                        }
+                        else if (x > 5)                 // wenn am linken zu nahe Rand
+                        {
+                            if (fields[x - 1, y + 1, 2] == farbeGegner && fields[x - 2, y + 2, 2] == 0)
+                            {
+                                if (lastPositionX == x && lastPositionY == y) return 1;         // zug ist i.O.
+                                else returnValue = 0;
+                            }
+                            else if (fields[x - 1, y - 1, 2] == farbeGegner && fields[x - 2, y - 2, 2] == 0)
+                            {
+                                if (lastPositionX == x && lastPositionY == y) return 1;         // zug ist i.O.
+                                else returnValue = 0;
+                            }
+                        }
+                        else
+                        {
+                            if (fields[x + 1, y + 1, 2] == farbeGegner && fields[x + 2, y + 2, 2] == 0)
+                            {
+                                if (lastPositionX == x && lastPositionY == y) return 1;         // zug ist i.O.
+                                else returnValue = 0;
+                            }
+                            else if (fields[x - 1, y + 1, 2] == farbeGegner && fields[x - 2, y + 2, 2] == 0)
+                            {
+                                if (lastPositionX == x && lastPositionY == y) return 1;         // zug ist i.O.
+                                else returnValue = 0;
+                            }
+                            else if (fields[x + 1, y - 1, 2] == farbeGegner && fields[x + 2, y - 2, 2] == 0)
+                            {
+                                if (lastPositionX == x && lastPositionY == y) return 1;         // zug ist i.O.
+                                else returnValue = 0;
+                            }
+                            else if (fields[x - 1, y - 1, 2] == farbeGegner && fields[x - 2, y - 2, 2] == 0)
+                            {
+                                if (lastPositionX == x && lastPositionY == y) return 1;         // zug ist i.O.
+                                else returnValue = 0;
+                            }
+                        }
+                    }
+
+                    else if (fields[x, y, 2] == 1)       // Wenn weisser Stein
+                    {
+                        if (y > 5) return 1;            // spielfeldrand unten zu nahe
+                        else if (x < 2)                 // wenn am linken zu nahe Rand
+                        {
+                            if (fields[x + 1, y + 1, 2] == 2 && fields[x + 2, y + 2, 2] == 0)
+                            {
+                                if (lastPositionX == x && lastPositionY == y) return 1;         // zug ist i.O.
+                                else returnValue = 0;
+                            }
+                        }
+                        else if (x > 5)                 // wenn am linken zu nahe Rand
+                        {
+                            if (fields[x - 1, y + 1, 2] == 2 && fields[x - 2, y + 2, 2] == 0)
+                            {
+                                if (lastPositionX == x && lastPositionY == y) return 1;         // zug ist i.O.
+                                else returnValue = 0;
+                            }
+                        }
+                        else
+                        {
+                            if (fields[x + 1, y + 1, 2] == 2 && fields[x + 2, y + 2, 2] == 0)
+                            {
+                                if (lastPositionX == x && lastPositionY == y) return 1;         // zug ist i.O.
+                                else returnValue = 0;
+                            }
+                            else if (fields[x - 1, y + 1, 2] == 2 && fields[x - 2, y + 2, 2] == 0)
+                            {
+                                if (lastPositionX == x && lastPositionY == y) return 1;         // zug ist i.O.
+                                else returnValue = 0;
+                            }
+                        }
+                    }
+
+                    else if (fields[x, y, 2] == 2)       // Wenn roter Stein
+                    {
+                        if (y < 5) return 1;            // spielfeldrand oben zu nahe
+                        else if (x < 2)                 // wenn am linken zu nahe Rand
+                        {
+                            if (fields[x + 1, y - 1, 2] == 1 && fields[x + 2, y - 2, 2] == 0)
+                            {
+                                if (lastPositionX == x && lastPositionY == y) return 1;         // zug ist i.O.
+                                else returnValue = 0;
+                            }
+                        }
+                        else if (x > 5)                 // wenn am linken zu nahe Rand
+                        {
+                            if (fields[x - 1, y - 1, 2] == 1 && fields[x - 2, y - 2, 2] == 0)
+                            {
+                                if (lastPositionX == x && lastPositionY == y) return 1;         // zug ist i.O.
+                                else returnValue = 0;
+                            }
+                        }
+                        else
+                        {
+                            if (fields[x + 1, y - 1, 2] == 1 && fields[x + 2, y - 2, 2] == 0)
+                            {
+                                if (lastPositionX == x && lastPositionY == y) return 1;         // zug ist i.O.
+                                else returnValue = 0;
+                            }
+                            else if (fields[x - 1, y - 1, 2] == 1 && fields[x - 2, y - 2, 2] == 0)
+                            {
+                                if (lastPositionX == x && lastPositionY == y) return 1;         // zug ist i.O.
+                                else returnValue = 0;
+                            }
+                        }
+                    }
+                }
+            }
+            if (returnValue == 0) return 0;         // schlagen wäre möglich
+            else return 1;
+        }
 */
