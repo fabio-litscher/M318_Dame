@@ -40,11 +40,11 @@
             this.lbl_schlagzwang = new System.Windows.Forms.Label();
             this.rdb_schlagzwangEin = new System.Windows.Forms.RadioButton();
             this.rdb_schlagzwangAus = new System.Windows.Forms.RadioButton();
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.pnl_schlagzwang = new System.Windows.Forms.Panel();
             this.txt_schlagzwang = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.pic_Spielfeld)).BeginInit();
             this.pnl_whichPlayer.SuspendLayout();
-            this.panel1.SuspendLayout();
+            this.pnl_schlagzwang.SuspendLayout();
             this.SuspendLayout();
             // 
             // pic_Spielfeld
@@ -163,17 +163,17 @@
             this.rdb_schlagzwangAus.Text = "Aus";
             this.rdb_schlagzwangAus.UseVisualStyleBackColor = true;
             // 
-            // panel1
+            // pnl_schlagzwang
             // 
-            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel1.Controls.Add(this.txt_schlagzwang);
-            this.panel1.Controls.Add(this.lbl_schlagzwang);
-            this.panel1.Controls.Add(this.rdb_schlagzwangAus);
-            this.panel1.Controls.Add(this.rdb_schlagzwangEin);
-            this.panel1.Location = new System.Drawing.Point(33, 247);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(125, 94);
-            this.panel1.TabIndex = 11;
+            this.pnl_schlagzwang.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pnl_schlagzwang.Controls.Add(this.txt_schlagzwang);
+            this.pnl_schlagzwang.Controls.Add(this.lbl_schlagzwang);
+            this.pnl_schlagzwang.Controls.Add(this.rdb_schlagzwangAus);
+            this.pnl_schlagzwang.Controls.Add(this.rdb_schlagzwangEin);
+            this.pnl_schlagzwang.Location = new System.Drawing.Point(33, 247);
+            this.pnl_schlagzwang.Name = "pnl_schlagzwang";
+            this.pnl_schlagzwang.Size = new System.Drawing.Size(125, 94);
+            this.pnl_schlagzwang.TabIndex = 11;
             // 
             // txt_schlagzwang
             // 
@@ -191,7 +191,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(784, 562);
-            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.pnl_schlagzwang);
             this.Controls.Add(this.lbl_console);
             this.Controls.Add(this.txt_console);
             this.Controls.Add(this.pnl_whichPlayer);
@@ -204,8 +204,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.pic_Spielfeld)).EndInit();
             this.pnl_whichPlayer.ResumeLayout(false);
             this.pnl_whichPlayer.PerformLayout();
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
+            this.pnl_schlagzwang.ResumeLayout(false);
+            this.pnl_schlagzwang.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -224,7 +224,7 @@
         private System.Windows.Forms.Label lbl_schlagzwang;
         private System.Windows.Forms.RadioButton rdb_schlagzwangEin;
         private System.Windows.Forms.RadioButton rdb_schlagzwangAus;
-        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel pnl_schlagzwang;
         private System.Windows.Forms.TextBox txt_schlagzwang;
     }
 }

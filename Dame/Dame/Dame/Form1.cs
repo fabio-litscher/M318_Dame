@@ -29,7 +29,7 @@ namespace Dame
         public Form1()
         {
             InitializeComponent();
-
+            
             setFixFields();            
             berechneKoordinaten();
             zeichneSteine();
