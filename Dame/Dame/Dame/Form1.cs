@@ -12,10 +12,11 @@ namespace Dame
 {
     public partial class Form1 : Form
     {
-        int[, ,] fields = new int[8, 8, 5];     // 3 Dimensionales Array: X, Y, Spielstein (0=kein Stein, 1=weiss, 2=rot), zulässiges Feld (0=ja, 1=nein), Dame (0=nein, 1=ja)
-        List<int> possibleHits = new List<int>();
-        int hitCounter = 0;
+        int[, ,] fields = new int[8, 8, 5];             // 3 Dimensionales Array: X, Y, Spielstein (0=kein Stein, 1=weiss, 2=rot), zulässiges Feld (0=ja, 1=nein), Dame (0=nein, 1=ja)
+        List<int> possibleHits = new List<int>();       // Liste in der die Felder gespeichert werden, die schlagen können
 
+        // Alle globalen Variablen werden initialisiert
+        int hitCounter = 0;
         int winner = 0;
         int schlagzwang = 0;
         int lastColor;
@@ -30,11 +31,15 @@ namespace Dame
         {
             InitializeComponent();
             
+            // Beim Start der Applikation werden die fixen Felder gesetzt, die Koordinaten der Felder berechnet, sowie die Steine gezeichnet.
             setFixFields();            
             berechneKoordinaten();
             zeichneSteine();
         }
 
+        /* In dieser Funktion werden alle werte in die Ausgangslage gebracht, das heisst, alle weissen Felder werden gesperrt
+         *  und die Werte für die Spielstein werden entsprechend gesetzt.
+        */
         public void setFixFields()
         {
             int lineCounter = 0;
@@ -47,13 +52,13 @@ namespace Dame
                 for (int k = 0; k < 8; k++)
                 {
                     fields[i, k, 4] = 0;
-                    fields[i, k, 3] = z; // 1 = nicht zulässig
-                    if (z == 1) // gesperrt
+                    fields[i, k, 3] = z;        // 1 = nicht zulässig
+                    if (z == 1)                 // gesperrt
                     {
                         z = 0;
                         fields[i, k, 2] = 0;
                     }
-                    else // zulässig
+                    else                        // zulässig
                     {
                         z = 1;
                         if (lineCounter < 3) fields[k, i, 2] = 1;
@@ -67,10 +72,10 @@ namespace Dame
             }
         }
 
+        // Diese Funktion startet, wenn die Fenstergrösse verändert wird, oder man das Fenster nach dem Minimieren wieder öffnet.
         private void Form1_SizeChanged(object sender, EventArgs e)
         {
-            // Damit die Steine und welcher Spieler dass dran ist angezeigt werden.
-            // Ohne das würden die Spielsteine nach minimieren, maximieren nicht angezeigt werden
+            // Damit die Steine und der Spieler der am Zug ist angezeigt werden, nachdem man das Fenster minimiert und wieder maximiert
             zeichneSteine();
             zeichneSpieler();
 
@@ -79,12 +84,13 @@ namespace Dame
                 // berechneKoordinaten();
         }
 
-        private void btn_newRound_Click(object sender, EventArgs e)
-        {
-            // neues spiel starten
-            newRound();
-        }
-
+        /* Wenn man auf das Spielfeld klickt werden folgende Sachen gemacht:
+         *      - Bestimmung auf welches feld man geklickt hat
+         *      - Überprüfung ob man den Schlagzwang ein- oder ausgeschaltet hat
+         *      - Hat man auf die richtige farbe geklickt (Ist der richtige Spieler am Zug)?
+         *      - Alle Regeln werden der Reihe nach überprüft
+         *          - Wenn eine Regel verletzt wird, wird der angehobene Stein wieder an seine Ausgangsposition gesetzt
+         */
         private void pic_Spielfeld_MouseClick(object sender, MouseEventArgs e) // Nur für Maus
         {
             int eineEinheit = pic_Spielfeld.Width / 10;
@@ -162,7 +168,11 @@ namespace Dame
 
             else
             {
-                if (weiterSchlagenMoeglich(feldX, feldY) == 1)    // wenn kein weiteres schlagen mehr möglich
+                // Wenn alles den Regeln entspricht:
+
+
+                // Falls man geschlagen hat und nochmals schlagen kann findet der Spielerwechsel nicht statt, sonst schon.
+                if (weiterSchlagenMoeglich(feldX, feldY) == 1)      // wenn kein weiteres schlagen mehr möglich
                 {
                     // spielerwechsel, wenn kein weiteres schlagen mehr möglich ist
                     if (lastColor == 1) spieler = 2;
@@ -171,6 +181,9 @@ namespace Dame
                     zeichneSpieler();
                 }
 
+                /* Der Stein wird auf das Feld entspechende feld gesetzt.
+                 * LastColor und lasPosition werden entsprechend gesetzt.
+                 */
                 switch (fields[feldX, feldY, 2])
                 {
                     case 0:
@@ -202,7 +215,7 @@ namespace Dame
                 }
             }
 
-            // überprüfung ob zu Dame wird
+            // überprüfung ob Stein zu Dame wird (passiert wenn man am anderen Spielfeldrand ist)
             if (fields[feldX, feldY, 2] == 1)
             {
                 if (feldY == 7) fields[feldX, feldY, 4] = 1;
@@ -212,6 +225,7 @@ namespace Dame
                 if (feldY == 0) fields[feldX, feldY, 4] = 1;
             }
 
+            // Zum Schluss sollen immer alle Steine gezeichnet werden
             zeichneSteine();
 
             // falls das Spiel fertig ist, soll eine Messagebox kommen
@@ -229,6 +243,31 @@ namespace Dame
 
         }
 
+        // Wenn man auf den Knopf "Neues Spiel starten" klickt, wird die Funktion newRound() aufgerufen
+        private void btn_newRound_Click(object sender, EventArgs e)
+        {
+            newRound();
+        }
+
+        /* In dieser Funktion werden folgende Sachen gemacht:
+         *      Spieler auf 1 setzen, damit weiss beginnt
+         *      Die fixen Felder setzen (gesperrte, Steine auf Ausgangsposition)
+         *      Anzeigen welcher Spieler dran ist (grüner Punkt)
+         *      Der Schlagzwang wieder auf "aus" (standard) setzen
+        */
+        public void newRound()
+        {
+            spieler = 1;
+            setFixFields();
+            zeichneSteine();
+            zeichneSpieler();
+            rdb_schlagzwangAus.Checked = true;
+        }
+
+        /* In dieser Funktion wird überprüft, ob ein Spieler gewonnen hat.
+         * Hierfür gehe ich das ganze Array durch und zähle die Steine der beiden Farben, falls von einer Farbe keine Steine mehr vorhanden sind,
+         *  hat der andere Spieler gewonnen und der Gewinner (1 oder 2) wird zurückgegeben.
+         */
         public int spielende()
         {
             int redCounter = 0;
@@ -248,15 +287,7 @@ namespace Dame
             else return 0;
         }
 
-        public void newRound()
-        {
-            spieler = 1;
-            setFixFields();
-            zeichneSteine();
-            zeichneSpieler();
-            rdb_schlagzwangAus.Checked = true;
-        }
-
+        // Hier wird bestimmt auf welches Feld man auf der X-Achse geklickt hat.
         public int fieldX(int wertX, int eineEinheit)
         {
             int feldX = -1, x = 0, exit = 0;
@@ -272,7 +303,8 @@ namespace Dame
             }
             return feldX;
         }
-
+        
+        // Hier wird bestimmt auf welches Feld man auf der Y-Achse geklickt hat.
         public int fieldY(int wertY, int eineEinheit)
         {
             int feldY = -1, y = 0, exit = 0;
@@ -289,24 +321,7 @@ namespace Dame
             return feldY;
         }
 
- /*       private void berechneGroesse()
-        {
-            int hoeheFenster = Form1.ActiveForm.Size.Height;
-            int breiteFenster = Form1.ActiveForm.Size.Width;
-
-            if (hoeheFenster < breiteFenster)
-            {
-                pic_Spielfeld.Height = hoeheFenster - 100;
-                pic_Spielfeld.Width = hoeheFenster - 100;
-            }
-            else
-            {
-                pic_Spielfeld.Height = breiteFenster - 100;
-                pic_Spielfeld.Width = breiteFenster - 100;
-            }
-            pic_Spielfeld.Location = new Point(breiteFenster / 4, 30);
-        } */
-
+        // In dieser Funktion wird berechnet, welche Koordinaten die einzelen felder haben 
         private void berechneKoordinaten()
         {
             int eineEinheit = pic_Spielfeld.Width / 10;
@@ -325,6 +340,7 @@ namespace Dame
             }
         }
 
+        // Diese Funktion füllt nur x- und y-Koordinaten ins Array ab und setzt den Damenstein auf 0
         private void fuelleArray(int x, int y, int wertX, int wertY)
         {
             fields[x, y, 0] = wertX;    // x Koordinate
@@ -332,6 +348,7 @@ namespace Dame
             fields[x, y, 4] = 0;        // Dame = nein
         }
 
+        // In dieser Funktion wird der grüne Punkt gezeichnet, der anzeigt, welcher Spieler am Zug ist.
         public void zeichneSpieler()
         {
             pnl_whichPlayer.Refresh();
@@ -354,6 +371,9 @@ namespace Dame
             }
         }
 
+        /* Hier wird das ganze Array durchlaufen und die entsprechenden Steine werden durch Aufruf von zeichneKreis() gezeichnet.
+         * Auch die Dame wird wenn nötig gezeichnet
+         */
         public void zeichneSteine()
         {
             pic_Spielfeld.Refresh();
@@ -373,6 +393,7 @@ namespace Dame
             }
         }
 
+        // Dies ist die Funktion die den Kreis am entsprechenden Ort, in der entsprechenden Farbe zeichnet.
         private void zeichneKreis(int x, int y, int color)
         {
             int d = 40;
@@ -395,10 +416,6 @@ namespace Dame
             }
         }
 
-        private void Form1_LocationChanged(object sender, EventArgs e)
-        {
-            //berechneKoordinaten();
-        }
 
 
 
@@ -406,6 +423,8 @@ namespace Dame
         // Regelen / Logik  //
         //////////////////////
 
+
+        // Fragt ab ob ein Feld gesperrt ist.
         public int feldGesperrt(int feldX, int feldY)
         {
             if (fields[feldX, feldY, 3] == 1)   // wenn feld gesperrt, return 0
@@ -415,6 +434,7 @@ namespace Dame
             else return 1;
         }
 
+        // Fragt ab, ob ein Feld besetzt ist.
         public int feldBesetzt(int feldX, int feldY)
         {
             if (fields[feldX, feldY, 2] != 0 && lastColor != 0) // wenn feld besetzt, return 0
@@ -424,6 +444,7 @@ namespace Dame
             else return 1;
         }
 
+        // Überprüft, ob man versucht mit einem normalen Stein rückwärts zu fahren.
         public int fahrtrichtung(int feldX, int feldY)
         {
             if (lastColor != 0 && fields[lastPositionX, lastPositionY, 4] == 1) return 0;
@@ -433,7 +454,7 @@ namespace Dame
             {
                 return 0;
             }
-            if (lastColor == 1) // farbe: weiss
+            if (lastColor == 1)         // farbe: weiss
             {
                 if (feldY < lastFieldY && lastFieldY != feldY)
                 {
@@ -441,7 +462,7 @@ namespace Dame
                 }
                 else return 0;
             }
-            else if (lastColor == 2) // farbe: rot
+            else if (lastColor == 2)    // farbe: rot
             {
                 if (feldY > lastFieldY && lastFieldY != feldY)
                 {
@@ -452,6 +473,7 @@ namespace Dame
             else return 0;
         }
         
+        // Üperprüft ob man den Stein wieder auf das gleiche Feld absetzt wie man ihn angehoben hat.
         public int gueltigeFahrt(int feldX, int feldY)
         {
             if (feldX == lastFieldX && lastColor != 0)
@@ -466,6 +488,7 @@ namespace Dame
             else return 0;
         }
 
+        // Hier wird die diagonale Distanz eines Zuges für normale Steine überprüft udn ob man geschlagen hat.
         public int diagonaleDistanzNormal(int feldX, int feldY)
         {
             if (lastColor != 0 && fields[lastPositionX, lastPositionY, 4] == 1) return 0;
@@ -581,6 +604,7 @@ namespace Dame
             else return 0;
         }
 
+        // In dieser funktion wird geschlagen, sprich der entsprechende Stein weggenommen (im Array Farbe auf 0 setzen).
         public void schlagen(int zuschlagenX, int zuschlagenY, int feldX, int feldY)
         {
             fields[zuschlagenX, zuschlagenY, 2] = 0;
@@ -589,6 +613,7 @@ namespace Dame
             schlagFeldY = feldY;
         }
 
+        // Überprüfung ob man nochmals schlagen kann, wenn man bereits geschlagen hat.
         public int weiterSchlagenMoeglich(int feldX, int feldY)
         {
             int farbeGegner = 0;
@@ -687,7 +712,12 @@ namespace Dame
             else return 1;   // weiteres schlagen nicht möglich
         }
 
-        public int schlagenMoeglich(int feldX, int feldY)   // überprüfung ob irgendwo geschlagen werden kann, nur diese Varianten sollen dann möglich sein
+        /* Überprüfung des Schlagzwangs.
+         * Falls ein Stein schlagen kann, wird abgefragt, ob man einer dieser Steine bewegt hat.
+         * Die möglichen Felder werden in einer Liste gespeichert und dann abgfragt, ob man den Stein auch wieder am richtigen Ort abgesetzt hat.
+         * Funktioniert manchmal noch nicht ganz, konnte aber nicht herausfinden wieso.
+         */
+        public int schlagenMoeglich(int feldX, int feldY)
         {
             int farbeGegner = 0;
             //if (firstRound == 1) return 1;
@@ -915,6 +945,7 @@ namespace Dame
             else return 0;                                  // kann irgendwo schlagen
         }
 
+        // Hier wird überprüft, ob man den Stein auf ein Feld setzt, dass laut Schlagzwang gültig ist.
         public int checkHitFields(int feldX, int feldY)
         {
             int k = 0;
@@ -935,6 +966,7 @@ namespace Dame
         /// Regeln Dame ///
         ///////////////////
 
+        // Der Damenstein wird gezeichnet, sprich das "D" wird auf den Kreis gezeichnet.
         public void zeichneDame(int x, int y)
         {
             int halbeEinheit = pic_Spielfeld.Width / 20;
@@ -950,6 +982,7 @@ namespace Dame
             formGraphics.Dispose();
         }
 
+        // Hier wird die diagonale Distanz eines Zuges für Damensteine überprüft udn ob man geschlagen hat.
         public int diagonaleDistanzDame(int feldX, int feldY)
         {
             if (lastColor != 0 && fields[lastPositionX, lastPositionY, 4] == 1)
@@ -1056,9 +1089,9 @@ namespace Dame
         ///  Some Code  ///
         ///////////////////
 
-
-/*      //Ausgabe ganzes array
-            for (int i =0; i<8; i++)
+        // Die klassische for-Schlaufe in einer zweiten for-Schlaufe zum durchlaufen meines Arrays ist hier abgelegt, damit ich sie nicht immer neu machen muss
+        
+/*          for (int i =0; i<8; i++)
             {
                 for (int k = 0; k<8; k++)
                 {
