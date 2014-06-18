@@ -199,7 +199,6 @@
             this.Controls.Add(this.pic_Spielfeld);
             this.Name = "Form1";
             this.Text = "Dame";
-            this.LocationChanged += new System.EventHandler(this.Form1_LocationChanged);
             this.SizeChanged += new System.EventHandler(this.Form1_SizeChanged);
             ((System.ComponentModel.ISupportInitialize)(this.pic_Spielfeld)).EndInit();
             this.pnl_whichPlayer.ResumeLayout(false);
